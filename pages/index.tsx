@@ -38,14 +38,14 @@ export default function Home() {
       <section id="contact" className="snap-start">
         <ContactMe />
       </section>
-      <Link href="#hero">
-        {" "}
-        <footer className="sticky bottom-5 w-full cursor-pointer">
+
+      <footer className="sticky bottom-5 w-full cursor-pointer">
+        <Link href="#hero">
           <div className="flex items-center justify-center">
             <ArrowUpIcon className="h-10 w-10 rounded-full" />
           </div>
-        </footer>
-      </Link>
+        </Link>
+      </footer>
     </div>
   );
 }

@@ -2,7 +2,6 @@ import React from "react";
 import { PhoneIcon, MapPinIcon, EnvelopeIcon } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { type } from "os";
 
 type Props = {};
 
@@ -70,6 +69,8 @@ function ContactMe({}: Props) {
             placeholder="Subject"
             className="contactInput"
             type="text"
+            name="subject"
+            id="subject"
           />
           <textarea
             {...register("message")}
