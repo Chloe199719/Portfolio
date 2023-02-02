@@ -22,7 +22,18 @@ function ContactMe({}: Props) {
       transition={{ duration: 1.5 }}
       className="h-screen flex relative flex-col text-center md:text-left md:flex-row max-w-7xl px10 justify-evenly mx-auto items-center"
     >
-      <h3 className="h3">Contact</h3>
+      <motion.h3
+        initial={{ x: 500, y: 1000, scale: 0.5 }}
+        whileInView={{
+          x: 0,
+          y: 0,
+          scale: 1,
+        }}
+        transition={{ duration: 2 }}
+        className="h3"
+      >
+        Contact
+      </motion.h3>
       <div className="flex flex-col space-y-10">
         <h4 className="text-4xl font-semibold text-center">
           Like what you see?{" "}
