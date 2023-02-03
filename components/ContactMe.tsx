@@ -2,8 +2,15 @@ import React from "react";
 import { PhoneIcon, MapPinIcon, EnvelopeIcon } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { PageInfo } from "@/typings";
+import { db } from "../firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { useState } from "react";
+import Alert from "./alert";
 
-type Props = {};
+type Props = {
+  pageInfo: PageInfo;
+};
 
 type Inputs = {
   name: string;
@@ -12,9 +19,34 @@ type Inputs = {
   message: string;
 };
 
-function ContactMe({}: Props) {
-  const { register, handleSubmit } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+function ContactMe({ pageInfo }: Props) {
+  const { register, handleSubmit, reset } = useForm<Inputs>();
+  const [load, setLoad] = useState(false);
+  const [error, setError] = useState("");
+  const [sent, setSent] = useState("");
+  const SendData = async function (data: any) {
+    setLoad(true);
+    setSent("");
+    setError("");
+    try {
+      await addDoc(collection(db, "messages"), {
+        email: data.email,
+        message: data.message,
+        subject: data.subject,
+        name: data.name,
+        timestamp: serverTimestamp(),
+      });
+      reset();
+      setSent("Your Message was Sent");
+      setLoad(false);
+    } catch (e) {
+      setError("Error delivering your message to our servers");
+      setLoad(false);
+    }
+  };
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    SendData(data);
+  };
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -23,79 +55,168 @@ function ContactMe({}: Props) {
       className="h-screen flex relative flex-col text-center md:text-left md:flex-row max-w-7xl px10 justify-evenly mx-auto items-center"
     >
       <motion.h3
-        initial={{ x: 500, y: 1000, scale: 0.5 }}
-        whileInView={{
-          x: 0,
-          y: 0,
-          scale: 1,
+        initial={{
+          y: 300,
+          opacity: 0,
         }}
-        transition={{ duration: 2 }}
+        whileInView={{ x: 0, opacity: 1, y: 0 }}
+        transition={{
+          duration: 1,
+        }}
+        viewport={{ once: true }}
         className="h3"
       >
         Contact
       </motion.h3>
       <div className="flex flex-col space-y-10">
-        <h4 className="text-4xl font-semibold text-center">
+        <motion.h4
+          initial={{
+            x: -300,
+          }}
+          whileInView={{
+            x: 0,
+          }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.5 }}
+          className="text-4xl font-semibold text-center"
+        >
           Like what you see?{" "}
-          <span className="decoration-[#f7ab0a]/50 underline">Contact Me</span>
-        </h4>
+          <span className="decoration-rose-300/50 underline">Contact Me</span>
+        </motion.h4>
         <div className="space-y-10">
-          <div className="flex items-center  space-x-5 justify-center">
-            <PhoneIcon className="text-[#f7ab0a] h-7 w-7 animate-pulse" />
-            <p className="text-2xl">+12312412341</p>
-          </div>
-          <div className="flex items-center  space-x-5 justify-center">
-            <MapPinIcon className="text-[#f7ab0a] h-7 w-7 animate-pulse" />
-            <p className="text-2xl">123 deve 51341</p>
-          </div>
-          <div className="flex items-center  space-x-5 justify-center">
-            <EnvelopeIcon className="text-[#f7ab0a] h-7 w-7 animate-pulse" />
-            <p className="text-2xl">chloe@chloevision.com</p>
-          </div>
+          <motion.div
+            initial={{
+              x: 300,
+            }}
+            whileInView={{
+              x: 0,
+            }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.5 }}
+            className="flex items-center  space-x-5 justify-center"
+          >
+            <PhoneIcon className="text-rose-300 h-7 w-7 animate-pulse" />
+            <p className="text-2xl">{pageInfo.address}</p>
+          </motion.div>
+          <motion.div
+            initial={{
+              x: -300,
+            }}
+            whileInView={{
+              x: 0,
+            }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.5 }}
+            className="flex items-center  space-x-5 justify-center"
+          >
+            <MapPinIcon className="text-rose-300 h-7 w-7 animate-pulse" />
+            <p className="text-2xl">{pageInfo.phoneNumber}</p>
+          </motion.div>
+          <motion.div
+            initial={{
+              x: 300,
+            }}
+            whileInView={{
+              x: 0,
+            }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.5 }}
+            className="flex items-center  space-x-5 justify-center"
+          >
+            <EnvelopeIcon className="text-rose-300 h-7 w-7 animate-pulse" />
+            <p className="text-2xl">{pageInfo.email}</p>
+          </motion.div>
         </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col space-y-2 w-fit mx-auto"
         >
           <div className="flex space-x-2">
-            <input
-              {...register("name")}
+            <motion.input
+              initial={{
+                x: -300,
+              }}
+              whileInView={{
+                x: 0,
+              }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.0 }}
+              {...register("name", { required: true })}
               className="contactInput"
               placeholder="Name"
               type="text"
               name="name"
               id="name"
+              required
             />
-            <input
-              {...register("email")}
+            <motion.input
+              initial={{
+                x: 300,
+              }}
+              whileInView={{
+                x: 0,
+              }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.0 }}
+              {...register("email", { required: true })}
               className="contactInput"
               placeholder="Email"
               type="email"
               name="email"
+              required
               id="email"
             />
           </div>
-          <input
-            {...register("subject")}
+          <motion.input
+            initial={{
+              x: -200,
+            }}
+            whileInView={{
+              x: 0,
+            }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2 }}
+            {...register("subject", { required: true })}
             placeholder="Subject"
             className="contactInput"
+            required
             type="text"
             name="subject"
             id="subject"
           />
-          <textarea
-            {...register("message")}
+          <motion.textarea
+            initial={{
+              x: 300,
+            }}
+            whileInView={{
+              x: 0,
+            }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+            {...register("message", { required: true })}
             placeholder="Message"
             className="contactInput"
-            name="content"
-            id="content"
+            name="message"
+            id="message"
           />
-          <button
+          <motion.button
+            initial={{
+              y: 200,
+            }}
+            whileInView={{
+              rotate: [0, 360, 180, 0],
+              y: 0,
+            }}
+            viewport={{ once: true }}
+            transition={{ duration: 2 }}
             type="submit"
-            className="bg-[#f7ab0a] py-5 px-10 rounded-sm text-black font-bold uppercase text-lg"
+            disabled={load}
+            className="bg-rose-400 py-5 px-10 rounded-sm text-black font-bold uppercase text-lg"
           >
             Submit
-          </button>
+          </motion.button>
+          {error ? <Alert color="red" message={error} func={setError} /> : null}
+          {sent ? <Alert color="green" message={sent} func={setSent} /> : null}
         </form>
       </div>
     </motion.div>

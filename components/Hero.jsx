@@ -1,28 +1,30 @@
-import { urlFor } from "@/sanity";
 import Image from "next/image";
 import Link from "next/link";
-import { type } from "os";
+import imageUrlBuilder from "@sanity/image-url";
 import React from "react";
 import { Cursor, useTypewriter } from "react-simple-typewriter";
 import BackgroundCircles from "./BackgroundCircles";
+import { config } from "@/sanity";
 
 function Hero({ pageInfo }) {
-  const myLoader = ({ src, width, quality }) => {
-    return `https://cdn.discordapp.com/attachments/1024956110249148456/1069756792676036729/${src}?w=${width}&q=${
-      quality || 75
-    }`;
-  };
+  const builder = imageUrlBuilder(config);
+
+  function urlFor(source) {
+    return builder.image(source);
+  }
   const [text, count] = useTypewriter({
-    words: ["Hi , Im Chloe", "Coding is Awsome", "#HireME"],
+    words: ["Hi , Im Chloe", "Coding is Awesome", "#HireME"],
     loop: true,
     delaySpeed: 2000,
   });
+  // console.log(urlFor(pageInfo?.heroImage));
   return (
     <div className="h-screen flex flex-col space-y-8 items-center justify-center text-center overflow-hidden">
       <BackgroundCircles />
       <Image
         className="relative rounded-full h-32 w-32 mx-auto object-cover"
         // loader={myLoader}
+
         src={urlFor(pageInfo?.heroImage).url()}
         alt="chloe"
         width={200}
@@ -34,15 +36,15 @@ function Hero({ pageInfo }) {
         </h2>
         <h1 className="text-5xl lg:text-6xl font-semibold px-10 ">
           <span className="mr-3  overflow-clip ">{text}</span>
-          <Cursor cursorColor="#f7ab0a" />
+          <Cursor cursorColor="#fb7185" />
         </h1>
         <div className="pt-5">
           <Link href="#about">
             <button className="heroButton">About</button>
           </Link>
-          <Link href="#experience">
+          {/* <Link href="#experience">
             <button className="heroButton">Experience</button>
-          </Link>
+          </Link> */}
           <Link href="#skills">
             <button className="heroButton">Skills</button>
           </Link>

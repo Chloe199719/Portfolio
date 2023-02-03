@@ -44,20 +44,20 @@ export default function Home({
         <Hero pageInfo={pageInfo} />
       </section>
       <section id="about" className="snap-center">
-        <About />
+        <About pageInfo={pageInfo} />
       </section>
       {/* Experience */}
-      <section id="experience" className="snap-center">
+      {/* <section id="experience" className="snap-center">
         <Experience />
-      </section>
+      </section> */}
       <section id="skills" className="snap-start">
-        <Skills />
+        <Skills skillsdata={skills} />
       </section>
       <section id="projects" className="snap-start">
-        <Projects />
+        <Projects projects={projects} />
       </section>
       <section id="contact" className="snap-start">
-        <ContactMe />
+        <ContactMe pageInfo={pageInfo} />
       </section>
 
       <footer className="sticky bottom-5 w-full cursor-pointer">
