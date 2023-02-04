@@ -3,6 +3,7 @@ import React from "react";
 import project1img from "./images/project1.png";
 import { motion } from "framer-motion";
 import { Project } from "@/typings";
+import { urlFor } from "@/sanity";
 
 type Props = {
   projects: Project[];
@@ -48,23 +49,34 @@ function Projects({ projects }: Props) {
             >
               <Image
                 className="w-[660px] h-[375px]"
-                src={project1img}
+                src={urlFor(p?.image).url()}
                 alt="project"
+                width={400}
+                height={500}
               />
             </motion.div>
             <div className="space-y-10 px-0 md:px10 max-w-6xl">
               <h4 className="text-4xl font-semibold text-center">
                 <span className="underline decoration-rose-400/50">
-                  Case study {i + 1}of {projects.length}
+                  {`Case study ${i + 1} of ${projects.length}: `}
                 </span>
-                Clone
+                <a href={p.linkToBuild}> {p.title}</a>
               </h4>
-              <p className="text-lg text-center md:text-left">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Odit
-                perferendis reprehenderit velit ab vel ipsum accusamus et!
-                Corrupti possimus quam nesciunt quod, repudiandae quibusdam
-                eaque blanditiis necessitatibus earum dolorum. Aut.
-              </p>
+              <div className="flex items-center space-x-2 justify-center">
+                {p?.technologies.map((tech) => {
+                  return (
+                    <Image
+                      key={tech._id}
+                      alt={tech.title}
+                      src={urlFor(tech.image).url()}
+                      width={400}
+                      height={500}
+                      className="h-10 w-10"
+                    />
+                  );
+                })}
+              </div>
+              <p className="text-lg text-center md:text-left">{p.summary}</p>
             </div>
           </div>
         ))}
@@ -72,7 +84,7 @@ function Projects({ projects }: Props) {
         {/* Projects */}
         {/* Projects */}
       </div>
-      <div className="w-full absolute top-[30] bg-rose-500/10 left-0 h-[500px] -skew-y-[10deg]"></div>
+      <div className="w-full absolute top-[30] bg-rose-500/10 left-0 h-[500px] -skew-y-[10deg] z-[-1]"></div>
     </motion.div>
   );
 }

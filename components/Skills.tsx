@@ -46,12 +46,14 @@ function Skills({ skillsdata }: Props) {
       </motion.h3>
 
       <div className="grid grid-cols-4 gap-5">
-        {skillsdata.slice(0, skillsdata.length / 2).map((e) => {
+        {skillsdata?.slice(0, skillsdata.length / 2).map((e) => {
           return <Skill key={e._id} skill={e} directionLeft={true} />;
         })}
-        {skillsdata.slice(skillsdata.length / 2, skillsdata.length).map((e) => {
-          return <Skill key={e._id} skill={e} />;
-        })}
+        {skillsdata
+          ?.slice(skillsdata.length / 2, skillsdata.length)
+          .map((e) => {
+            return <Skill key={e._id} skill={e} />;
+          })}
       </div>
     </motion.div>
   );

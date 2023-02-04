@@ -26,5 +26,5 @@
     "additional.d.ts",
     "components/Hero.jsx"
   ],
-  "exclude": ["node_modules", "chloe-portfolio"]
+  "exclude": ["node_modules", "chloe-portfolio", "trash"]
 }

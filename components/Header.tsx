@@ -18,7 +18,7 @@ function Header({ socials }: Props) {
         }}
         className="flex flex-row items-center"
       >
-        {socials.map((social) => {
+        {socials?.map((social) => {
           return (
             <SocialIcon
               key={social._id}
