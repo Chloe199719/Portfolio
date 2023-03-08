@@ -11,6 +11,7 @@ type Props = {
 
 function Projects({ projects }: Props) {
   // const projects = [1, 2, 3, 4, 5];
+  console.log(projects[0].technologies);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -64,11 +65,12 @@ function Projects({ projects }: Props) {
               </h4>
               <div className="flex items-center space-x-2 justify-center">
                 {p?.technologies.map((tech) => {
+                  if (tech === null) return;
                   return (
                     <Image
                       key={tech._id}
-                      alt={tech.title}
-                      src={urlFor(tech.image).url()}
+                      alt={tech?.title}
+                      src={urlFor(tech?.image).url()}
                       width={400}
                       height={500}
                       className="h-10 w-10"

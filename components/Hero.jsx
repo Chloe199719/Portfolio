@@ -13,7 +13,11 @@ function Hero({ pageInfo }) {
     return builder.image(source);
   }
   const [text, count] = useTypewriter({
-    words: [`Hi ,i'm ${pageInfo.name}`, "Coding is Awesome", "#HireME"],
+    words: [
+      `Hi ,i'm ${pageInfo.name}`,
+      "#TypeScript is Awesome",
+      "Self Taught Engineer",
+    ],
     loop: true,
     delaySpeed: 2000,
   });
