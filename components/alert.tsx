@@ -52,7 +52,7 @@ function Alert({ color, message, func }: Props) {
         }}
         className={`bg-green-100 border border-green-400 px-4 text-green-700 py-3 rounded relative flex gap-2 `}
       >
-        <h6 className="font-bold uppercase ">Error!</h6>
+        <h6 className="font-bold uppercase ">Success!</h6>
         <span className="block sm:inline">{message}</span>
         <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
           <svg
