@@ -4,6 +4,8 @@
 
 Checks cover lint, types, generated API consistency, frontend unit tests/build, Go vet/race integration tests with PostgreSQL 18, and desktop/mobile browser tests against disposable local services. Fork pull requests receive no deployment credentials. Actions are pinned to commit IDs; the Vercel CLI is pinned to a version.
 
+PostgreSQL 18 is installed from its signed Ubuntu repository on disposable GitHub-hosted runners. Tests use their own cluster and loopback port 55432. Backend image builds use Google's public Docker Hub cache through the runner's Docker daemon, with normal upstream fallback. Both setup scripts refuse to run outside GitHub-hosted Linux runners; neither changes the Linode host or its containers. The backend check also builds the deployment image.
+
 Deployment builds one Go AMD64 image named for the commit, transfers it over verified SSH, backs up the existing portfolio data, and replaces only the portfolio backend container. Health failure restores the previous image. Database migrations must remain backward compatible: automatic image rollback does not undo schema/data changes. The frontend uses Vercel's pull/build/prebuilt deployment flow. Staging receives its stable custom-domain alias through the deployment API, which supports project-scoped tokens without the CLI alias command's account lookup. The workflow validates the deployment JSON and the alias response. Production uses `--prod`. `vercel.json` disables duplicate Git-triggered Vercel builds so they cannot bypass checks or replace production during staging. `.vercelignore` explicitly allows only frontend source; local Git ignores alone do not protect CLI uploads.
 
 ## Required GitHub configuration
@@ -53,3 +55,5 @@ The current source tree must be committed and pushed before GitHub can run these
 References: [Vercel's GitHub Actions flow](https://vercel.com/kb/guide/how-can-i-use-github-actions-with-vercel), [GitHub deployment environments](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/control-deployments), [Vercel Git deployment control](https://vercel.com/docs/project-configuration/git-configuration#git.deploymentenabled).
 
 The staging alias script follows [Vercel's Assign an Alias API](https://vercel.com/docs/rest-api/aliases/assign-an-alias). See [Vercel's upload exclusions](https://vercel.com/docs/deployments/vercel-ignore) before changing the frontend allowlist.
+
+CI package sources: [PostgreSQL's Ubuntu repository](https://www.postgresql.org/download/linux/ubuntu/) and [Google's Docker Hub cache](https://docs.cloud.google.com/artifact-registry/docs/pull-cached-dockerhub-images).

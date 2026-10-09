@@ -39,6 +39,10 @@ jobs:
       - name: Stop test database
         if: always()
         run: bash scripts/ci-postgres.sh stop
+      - name: Configure public base-image cache
+        run: bash scripts/ci-docker-cache.sh
+      - name: Validate deployable backend image
+        run: docker build --platform linux/amd64 -f backend/Dockerfile -t chloe-backend:ci .
   browser:
     runs-on: ubuntu-24.04
     timeout-minutes: 20

@@ -65,6 +65,8 @@ jobs:
           printf '%s\n' "$SSH_PRIVATE_KEY" > "$RUNNER_TEMP/ssh/deploy_key"
           printf '%s\n' "$SSH_KNOWN_HOSTS" > "$RUNNER_TEMP/ssh/known_hosts"
           chmod 600 "$RUNNER_TEMP/ssh/"*
+      - name: Configure public base-image cache
+        run: bash scripts/ci-docker-cache.sh
       - name: Build backend image
         run: docker build --platform linux/amd64 -f backend/Dockerfile -t "chloe-backend:sha-$GITHUB_SHA" .
       - name: Deploy only the portfolio backend
