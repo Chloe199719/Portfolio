@@ -46,3 +46,10 @@ See [the deployment runbook](README.md) for commands and configuration. The loca
 - `https://staging.chloepratas.com` serves a read-only preview from the versioned public content export. API/auth URLs are deliberately unset for this preview. Rebuild with the live staging backend URLs and `NEXT_PUBLIC_READ_ONLY=false` once DNS/HTTPS are ready.
 - The project-scoped Vercel token was verified against the project API, configuration pull, preview creation, and staging alias assignment through the API. Its CLI account-inspection/alias commands require broader account access, which was not granted.
 - GitHub Actions definitions are on `codex/portfolio-staging`. GitHub CLI authorization/environment secrets and a hosted workflow run are still pending; continuous deployment is not enabled yet.
+
+## GitHub delivery setup — 10 October 2026
+
+- GitHub CLI authorization is complete. The `staging` environment allows deployment only from `main` and contains encrypted `VERCEL_TOKEN`, `LINODE_SSH_PRIVATE_KEY`, and `LINODE_KNOWN_HOSTS` secrets plus the public deployment variables. The temporary local Vercel token copies were removed after verifying GitHub storage.
+- [Hosted checks passed](https://github.com/Chloe199719/Portfolio/actions/runs/38002066784) for implementation commit `a7a107924af77df7fd516c5127ff3f1ffda4fe03`: frontend generation/lint/types/tests/build, Go vet/race integration tests, desktop/mobile browser tests, and the deployable backend image build.
+- The initial hosted run hit Docker Hub's unauthenticated pull limit before PostgreSQL could start. CI now installs PostgreSQL 18 from its signed Ubuntu repository into a dedicated test cluster, and image builds use the documented Docker Hub cache on disposable runners. Setup scripts reject non-GitHub-hosted environments.
+- [Draft PR #1](https://github.com/Chloe199719/Portfolio/pull/1) contains the implementation and workflows. `DEPLOYMENTS_ENABLED=false` remains in place until backend DNS, HTTPS, and staging acceptance are complete. The frontend remains a read-only preview; existing Linode services remain unchanged.
