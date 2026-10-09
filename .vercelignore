@@ -1,0 +1,16 @@
+# Upload only frontend source. Git-ignored files are not automatically private
+# from Vercel CLI uploads; backups, credentials, and the Go service stay local.
+/*
+!app
+!components
+!lib
+!public
+!styles
+!package.json
+!package-lock.json
+!next.config.js
+!next-env.d.ts
+!tsconfig.json
+!tailwind.config.js
+!postcss.config.js
+!vercel.json
