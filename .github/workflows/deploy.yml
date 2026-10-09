@@ -1,0 +1,101 @@
+name: Deploy portfolio
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Deployment environment
+        required: true
+        default: staging
+        type: choice
+        options: [staging, production]
+permissions:
+  contents: read
+concurrency:
+  group: deploy-${{ inputs.environment || 'staging' }}
+  cancel-in-progress: false
+jobs:
+  checks:
+    uses: ./.github/workflows/ci.yml
+  deploy:
+    needs: checks
+    if: github.ref == 'refs/heads/main' && vars.DEPLOYMENTS_ENABLED == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    environment:
+      name: ${{ inputs.environment || 'staging' }}
+      url: ${{ vars.SITE_URL }}
+    env:
+      TARGET_ENV: ${{ inputs.environment || 'staging' }}
+      PRODUCTION_READY: ${{ vars.PRODUCTION_READY }}
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+      VERCEL_SCOPE: ${{ vars.VERCEL_SCOPE }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      LINODE_HOST: ${{ vars.LINODE_HOST }}
+      LINODE_USER: ${{ vars.LINODE_USER }}
+      NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}
+      NEXT_PUBLIC_API_URL: ${{ vars.API_URL }}
+      NEXT_PUBLIC_AUTH_URL: ${{ vars.AUTH_URL }}
+      NEXT_PUBLIC_READ_ONLY: "false"
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with: { persist-credentials: false }
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with: { node-version: 24, cache: npm }
+      - name: Check deployment configuration
+        run: |
+          set -euo pipefail
+          for name in VERCEL_ORG_ID VERCEL_PROJECT_ID VERCEL_SCOPE VERCEL_TOKEN LINODE_HOST LINODE_USER NEXT_PUBLIC_SITE_URL NEXT_PUBLIC_API_URL NEXT_PUBLIC_AUTH_URL; do
+            [[ -n "${!name}" ]] || { echo "Missing configuration: $name" >&2; exit 1; }
+          done
+          if [[ "$TARGET_ENV" == production && "$PRODUCTION_READY" != true ]]; then
+            echo 'Complete staging acceptance and production setup first.' >&2
+            exit 1
+          fi
+      - name: Prepare pinned SSH host and dedicated deploy key
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.LINODE_SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.LINODE_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          test -n "$SSH_PRIVATE_KEY"
+          test -n "$SSH_KNOWN_HOSTS"
+          install -m 700 -d "$RUNNER_TEMP/ssh"
+          printf '%s\n' "$SSH_PRIVATE_KEY" > "$RUNNER_TEMP/ssh/deploy_key"
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$RUNNER_TEMP/ssh/known_hosts"
+          chmod 600 "$RUNNER_TEMP/ssh/"*
+      - name: Build backend image
+        run: docker build --platform linux/amd64 -f backend/Dockerfile -t "chloe-backend:sha-$GITHUB_SHA" .
+      - name: Deploy only the portfolio backend
+        run: |
+          set -euo pipefail
+          docker save "chloe-backend:sha-$GITHUB_SHA" | gzip -1 | ssh \
+            -i "$RUNNER_TEMP/ssh/deploy_key" \
+            -o UserKnownHostsFile="$RUNNER_TEMP/ssh/known_hosts" \
+            -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -o BatchMode=yes \
+            -o ConnectTimeout=15 -o ServerAliveInterval=15 -o ServerAliveCountMax=4 \
+            "$LINODE_USER@$LINODE_HOST" "deploy $GITHUB_SHA"
+          curl --fail --silent --show-error --retry 5 --retry-all-errors "$NEXT_PUBLIC_API_URL/v1/health"
+          curl --fail --silent --show-error "$NEXT_PUBLIC_AUTH_URL/.well-known/openid-configuration" >/dev/null
+      - name: Install pinned Vercel CLI
+        run: npm install --global vercel@63.1.0
+      - name: Build and deploy frontend
+        run: |
+          set -euo pipefail
+          if [[ "$TARGET_ENV" == production ]]; then
+            vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+            vercel build --prod --token="$VERCEL_TOKEN"
+            vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+          else
+            vercel pull --yes --environment=preview --token="$VERCEL_TOKEN"
+            vercel build --token="$VERCEL_TOKEN"
+            deployment=$(vercel deploy --prebuilt --token="$VERCEL_TOKEN")
+            vercel alias set "$deployment" "${NEXT_PUBLIC_SITE_URL#https://}" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
+          fi
+          curl --fail --silent --show-error --retry 5 --retry-all-errors "$NEXT_PUBLIC_SITE_URL" >/dev/null
+          printf 'Deployed `%s` to %s.\n' "$GITHUB_SHA" "$NEXT_PUBLIC_SITE_URL" >> "$GITHUB_STEP_SUMMARY"
+      - name: Remove runner credentials
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/ssh" .vercel

@@ -1,0 +1,13 @@
+node_modules
+.next
+.backups
+data
+package-lock.json
+lib/content-snapshot.json
+test-results
+playwright-report
+AGENTS.md
+
+backend/go.sum
+backend/seed
+lib/generated
