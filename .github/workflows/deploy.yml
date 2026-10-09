@@ -31,7 +31,6 @@ jobs:
       PRODUCTION_READY: ${{ vars.PRODUCTION_READY }}
       VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
-      VERCEL_SCOPE: ${{ vars.VERCEL_SCOPE }}
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       LINODE_HOST: ${{ vars.LINODE_HOST }}
       LINODE_USER: ${{ vars.LINODE_USER }}
@@ -47,7 +46,7 @@ jobs:
       - name: Check deployment configuration
         run: |
           set -euo pipefail
-          for name in VERCEL_ORG_ID VERCEL_PROJECT_ID VERCEL_SCOPE VERCEL_TOKEN LINODE_HOST LINODE_USER NEXT_PUBLIC_SITE_URL NEXT_PUBLIC_API_URL NEXT_PUBLIC_AUTH_URL; do
+          for name in VERCEL_ORG_ID VERCEL_PROJECT_ID VERCEL_TOKEN LINODE_HOST LINODE_USER NEXT_PUBLIC_SITE_URL NEXT_PUBLIC_API_URL NEXT_PUBLIC_AUTH_URL; do
             [[ -n "${!name}" ]] || { echo "Missing configuration: $name" >&2; exit 1; }
           done
           if [[ "$TARGET_ENV" == production && "$PRODUCTION_READY" != true ]]; then
@@ -91,8 +90,8 @@ jobs:
           else
             vercel pull --yes --environment=preview --token="$VERCEL_TOKEN"
             vercel build --token="$VERCEL_TOKEN"
-            deployment=$(vercel deploy --prebuilt --token="$VERCEL_TOKEN")
-            vercel alias set "$deployment" "${NEXT_PUBLIC_SITE_URL#https://}" --scope="$VERCEL_SCOPE" --token="$VERCEL_TOKEN"
+            vercel deploy --prebuilt --json --token="$VERCEL_TOKEN" > "$RUNNER_TEMP/vercel-deployment.json"
+            node scripts/alias-vercel-staging.mjs "$RUNNER_TEMP/vercel-deployment.json"
           fi
           curl --fail --silent --show-error --retry 5 --retry-all-errors "$NEXT_PUBLIC_SITE_URL" >/dev/null
           printf 'Deployed `%s` to %s.\n' "$GITHUB_SHA" "$NEXT_PUBLIC_SITE_URL" >> "$GITHUB_STEP_SUMMARY"
