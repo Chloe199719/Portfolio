@@ -11,6 +11,22 @@ import (
 	"github.com/pquerna/otp/totp"
 )
 
+func freshAuthenticatorCode(t *testing.T, secret string) string {
+	t.Helper()
+	// Password verification under the race detector can cross a 30-second
+	// boundary. Start with enough time left for that work without changing the
+	// production policy that rejects expired and replayed codes.
+	remaining := time.Until(time.Now().Truncate(30 * time.Second).Add(30 * time.Second))
+	if remaining < 6*time.Second {
+		time.Sleep(remaining + 50*time.Millisecond)
+	}
+	code, err := totp.GenerateCode(secret, time.Now())
+	if err != nil {
+		t.Fatal(err)
+	}
+	return code
+}
+
 func TestOptionalAuthenticator(t *testing.T) {
 	for _, role := range []string{"owner", "visitor"} {
 		t.Run(role, func(t *testing.T) {
@@ -51,7 +67,7 @@ func TestOptionalAuthenticator(t *testing.T) {
 			}
 			_ = h.s.DB.QueryRow(ctx, "SELECT totp_secret FROM accounts WHERE id=$1", uid).Scan(&secret)
 			status(t, h.form(t, "/account/authenticator", url.Values{"action": {"enable"}, "otp": {"invalid"}}), 200)
-			otp, _ := totp.GenerateCode(secret, time.Now())
+			otp := freshAuthenticatorCode(t, secret)
 			status(t, h.form(t, "/account/authenticator", url.Values{"action": {"enable"}, "otp": {otp}}), 303)
 			status(t, h.call(t, "GET", "/v1/account", nil), 401) // pre-enrollment session revoked
 			res = h.call(t, "GET", "/account/authenticator", nil)
@@ -75,8 +91,9 @@ func TestOptionalAuthenticator(t *testing.T) {
 			// Advance the stored replay counter backwards in this isolated fixture to
 			// exercise a new-code disable without a wall-clock-dependent 30s wait.
 			_, _ = h.s.DB.Exec(ctx, "UPDATE accounts SET totp_last=0 WHERE id=$1", uid)
-			otp, _ = totp.GenerateCode(secret, time.Now())
+			otp = freshAuthenticatorCode(t, secret)
 			status(t, h.form(t, "/account/authenticator", url.Values{"action": {"disable"}, "current": {"wrong"}, "otp": {otp}}), 200)
+			otp = freshAuthenticatorCode(t, secret)
 			status(t, h.form(t, "/account/authenticator", url.Values{"action": {"disable"}, "current": {"a sufficiently long password"}, "otp": {otp}}), 303)
 			_ = h.s.DB.QueryRow(ctx, "SELECT totp_confirmed,totp_secret FROM accounts WHERE id=$1", uid).Scan(&enabled, &secret)
 			if enabled || secret != "" {
@@ -87,7 +104,7 @@ func TestOptionalAuthenticator(t *testing.T) {
 			status(t, h.form(t, "/account/authenticator", url.Values{"action": {"start"}, "current": {"a sufficiently long password"}}), 303)
 			_, _ = h.s.DB.Exec(ctx, "UPDATE accounts SET totp_pending_at=now()-interval '11 minutes' WHERE id=$1", uid)
 			_ = h.s.DB.QueryRow(ctx, "SELECT totp_secret FROM accounts WHERE id=$1", uid).Scan(&secret)
-			otp, _ = totp.GenerateCode(secret, time.Now())
+			otp = freshAuthenticatorCode(t, secret)
 			status(t, h.form(t, "/account/authenticator", url.Values{"action": {"enable"}, "otp": {otp}}), 200)
 			_ = h.s.DB.QueryRow(ctx, "SELECT totp_confirmed FROM accounts WHERE id=$1", uid).Scan(&enabled)
 			if enabled {
