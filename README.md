@@ -52,6 +52,8 @@ Visit `/admin`, sign in with Chloe ID, and complete the separate authenticator s
 
 `auth.` serves independently of Vercel: local registration, email verification, login, recovery, Google/GitHub login, explicit linking, passkeys, account management, login sessions, app consent, and revocation. Social identities are keyed by provider subject. Matching email addresses never merge accounts.
 
+Website-only sign-out preserves the Chloe ID session for quick sign-in. The separate **Sign out of Chloe ID** action confirms on the issuer, then ends both the identity and portfolio sessions in that browser. A short-lived, one-use ticket bound to an API-host cookie carries the confirmed logout between hosts; other devices and applications retain their own sessions.
+
 The Fosite provider exposes discovery, JWKS, authorization, token, UserInfo, introspection, revocation, and an interactive logout endpoint. Authorization Code + S256 PKCE is mandatory for all clients. Tokens use five-minute lifetimes; refresh tokens rotate with replay detection. Signing keys and the opaque-token HMAC secret persist on disk. Old public keys remain available after rotation.
 
 Owner-managed applications are in the dashboard. Register exact callbacks, allowed browser origins, and scopes. Public browser/native clients have no secret; confidential web clients use `client_secret_basic`. Wildcards, fragments, and unsafe redirects are rejected. OAuth protocol requests use PKCE/state and client authentication; website mutations use host-scoped HTTP-only cookies, exact origin checks, and CSRF tokens. Browser application tokens are never written to local storage.

@@ -21,6 +21,8 @@ func (s *Server) routes(m *http.ServeMux) {
 	m.HandleFunc("DELETE /v1/session", s.session)
 	m.HandleFunc("GET /v1/session/start", s.sessionStart)
 	m.HandleFunc("GET /v1/session/callback", s.sessionCallback)
+	m.HandleFunc("GET /v1/session/logout/start", s.logoutStart)
+	m.HandleFunc("GET /v1/session/logout/callback", s.logoutCallback)
 	m.HandleFunc("GET /v1/admin/content", s.contentIndex)
 	m.HandleFunc("GET /v1/admin/content/{id}", s.contentItem)
 	m.HandleFunc("POST /v1/admin/content/{id}", s.contentItem)

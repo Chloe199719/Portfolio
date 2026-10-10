@@ -76,7 +76,7 @@ export function AuthControls({
             Sign out of Chloe ID <ExitIcon />
           </a>
           <p className="form-help">
-            End your Chloe ID session in this browser.
+            Sign out of Chloe ID and this website in this browser.
           </p>
         </div>
       )}

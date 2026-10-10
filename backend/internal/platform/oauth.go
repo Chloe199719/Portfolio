@@ -236,22 +236,6 @@ func (s *Server) userInfo(w http.ResponseWriter, r *http.Request) {
 	}
 	send(w, 200, out)
 }
-func (s *Server) logout(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
-		if !s.csrf(w, r) {
-			return
-		}
-		if _, e := s.DB.Exec(r.Context(), "DELETE FROM sessions WHERE hash=$1", hash(s.cookieValue(r, "chloe_identity"))); e != nil {
-			fail(w, e)
-			return
-		}
-		s.cookie(w, "chloe_identity", "", -1)
-		http.Redirect(w, r, s.C.SiteURL, 303)
-		return
-	}
-	s.page(w, r, "Sign out?", `<p>This ends your Chloe ID browser session. Connected app access can be revoked from your account.</p><form method="post">`+hiddenForm+`<button>Sign out</button></form>`, nil)
-}
-
 // Browsers apply form-action to redirects too. Only the already validated
 // registered application's origin (or native URI scheme) is permitted.
 func consentTarget(redirect string) string {
