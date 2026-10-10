@@ -61,3 +61,11 @@ See [the deployment runbook](README.md) for commands and configuration. The loca
 - The pre-change Caddy backup is `/opt/chloe-staging/.backups/caddy-20261010T082848Z`. The live backend still uses release `373ca03890e7151c8ca99eecf32359fa2a27a821`.
 - Built an API-connected Vercel preview successfully at `https://portfolio-awvupnd12-chloe-pratas-projects.vercel.app` with the staging API/auth URLs and `NEXT_PUBLIC_READ_ONLY=false`. It has not replaced the staging alias.
 - Public connectivity remains blocked: authoritative DNS over TCP, an independent HTTPS resolver, and Linode still returned Cloudflare proxy addresses after the reported DNS change. Public HTTPS fails at the proxy while direct Linode HTTPS succeeds. Verify that **both** API/auth records have saved **DNS only** status, then recheck public HTTPS and switch the staging alias to the prepared deployment. Existing production deployment and continuous-deployment gates remain unchanged.
+
+## Connected staging acceptance — 10 October 2026
+
+- The DNS proxy blocker above is resolved. Both staging API/auth A records now resolve to `104.105.15.153`, with no authoritative AAAA records. Public HTTPS health and identity discovery return HTTP 200 from the local machine and Linode.
+- Switched `https://staging.chloepratas.com` to deployment `dpl_GWDch87kZWfrT37FoJqSHb1JGW41` (`https://portfolio-awvupnd12-chloe-pratas-projects.vercel.app`). The frontend now uses the live Go API and has `NEXT_PUBLIC_READ_ONLY=false`. The previous read-only deployment remains available for rollback.
+- Verified 13 public routes, including the dashboard entry page, contact page, feeds, sitemap, and robots file, return HTTP 200. Browser verification showed live database content, an enabled dashboard sign-in button, and a successful API-to-identity redirect to the HTTPS email/password login page.
+- Backend, PostgreSQL, and existing host services remain healthy. No existing containers were restarted. Owner authentication and authenticator enrollment require the owner's next sign-in; they were not completed on the owner's behalf. Google/GitHub provider credentials and transactional mail are still pending, and public registration remains disabled.
+- Production has not been replaced. `DEPLOYMENTS_ENABLED=false` remains until the remaining staging acceptance and release steps are complete.
