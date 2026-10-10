@@ -320,7 +320,7 @@ func (s *Server) register(w http.ResponseWriter, r *http.Request) {
 				fail(w, e)
 				return
 			}
-			data["Notice"] = "If this address is available, a verification email is on its way."
+			data["Notice"] = "If this address is available, a verification email is on its way. Check your inbox and spam folder."
 		}
 	}
 	s.page(w, r, "Make yourself at home.", `<form method="post">`+hiddenForm+`<label>Name<input name="name" required maxlength="100" autocomplete="name"></label><label>Email<input name="email" type="email" required autocomplete="email"></label><label>Password <small>At least 12 characters</small><input name="password" type="password" required minlength="12" maxlength="72" autocomplete="new-password"></label><button>Create account</button></form><p><a href="/login">Already have an account?</a></p>`, data)
@@ -373,7 +373,7 @@ func (s *Server) recover(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 			}
-			data["Notice"] = "If an account can be recovered, instructions will arrive by email."
+			data["Notice"] = "If an account can be recovered, instructions will arrive by email. Check your inbox and spam folder."
 		}
 	}
 	s.page(w, r, "Find your way back.", `<form method="post">`+hiddenForm+`<label>Email<input name="email" type="email" required autocomplete="email"></label><button>Send recovery instructions</button></form><p><a href="/login">Back to sign in</a></p>`, data)

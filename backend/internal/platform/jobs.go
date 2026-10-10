@@ -154,7 +154,7 @@ func (s *Server) smtpSend(key, to, subject, body string) error {
 	if e != nil {
 		return e
 	}
-	_, e = fmt.Fprintf(w, "From: %s\r\nTo: %s\r\nSubject: %s\r\nMessage-ID: <%s@%s>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n%s", s.C.MailFrom, to, subject, key, strings.Split(s.C.MailFrom, "@")[1], strings.ReplaceAll(body, "\n", "\r\n"))
+	_, e = fmt.Fprintf(w, "From: %s\r\nTo: %s\r\nSubject: %s\r\nDate: %s\r\nMessage-ID: <%s@%s>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n%s", s.C.MailFrom, to, subject, time.Now().UTC().Format(time.RFC1123Z), key, strings.Split(s.C.MailFrom, "@")[1], strings.ReplaceAll(body, "\n", "\r\n"))
 	if e != nil {
 		return e
 	}
