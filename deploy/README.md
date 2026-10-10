@@ -58,7 +58,7 @@ Keep `REGISTRATION_ENABLED=false` until you have tested verification, recovery, 
 
 Google redirect URI: `https://auth.DOMAIN/social/google/callback`.
 GitHub callback: `https://auth.DOMAIN/social/github/callback`.
-Set each provider’s ID and secret only in the Linode environment. Test cancellation, existing-account conflicts, explicit linking, and owner MFA before launch.
+Set each provider’s ID and secret only in the Linode environment. Test cancellation, existing-account conflicts, explicit linking, and opt-in authenticator enforcement before launch.
 
 Bootstrap the owner using a private password file temporarily mounted into a one-off backend container:
 
@@ -67,7 +67,7 @@ docker compose run --rm -v /secure/password.txt:/run/owner-password:ro backend \
   owner owner@example.com 'Chloe' /run/owner-password
 ```
 
-The non-root backend user must be able to read the file (set its ownership to UID 10001 and mode 0400). Remove the password file, then sign in with the owner password and complete the QR-code authenticator setup. The CLI does not print the factor secret. No frontend owner UID, shared admin secret, or registration setting grants owner access.
+The non-root backend user must be able to read the file (set its ownership to UID 10001 and mode 0400). Remove the password file, then sign in with the owner password. An authenticator is optional for every account, including the owner. Enable it explicitly at `/account/authenticator` by confirming the current password and a code from the QR enrollment. Existing confirmed factors remain enforced; disabling one requires the password and an unused code. Enabling or disabling revokes other sessions and application grants. No frontend owner UID, shared admin secret, or registration setting grants owner access.
 
 Vercel’s project root is the repository root, framework Next.js, build `npm run build`, Node 24. Configure only:
 

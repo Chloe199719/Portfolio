@@ -1,0 +1,8 @@
+$ORIGIN chloepratas.com.
+$TTL 300
+mail.staging IN A 104.105.15.153
+notify.staging IN MX 10 mail.staging.chloepratas.com.
+notify.staging IN TXT "v=spf1 ip4:104.105.15.153 -all"
+mail.staging IN TXT "v=spf1 ip4:104.105.15.153 -all"
+_dmarc.notify.staging IN TXT "v=DMARC1; p=none; rua=mailto:dmarc@notify.staging.chloepratas.com"
+mail._domainkey.notify.staging IN TXT ("v=DKIM1; h=sha256; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmBkiSygE790bpUnWG81D5JE8or4deYf/WbsjGSD7dTBHh4cgqLoOy0VZzyQaw/6WZjafw+/fsTtPUhqyNo7RgjraTf1yhRwjC6Ssu6xQHr+pUd924aLXE+sB7GYvJwGA" "8kgmMFI0bNDXcegHskAPOCnJgF+YRLuuSVl3bZONSG5a2ZnT/qoJoYcDeiFa0U7EO+lTzopdhXHcDbpsfw43M+Bo2k2z0lBG0iSMSIEXCm+ttUa2IdeIGRApOxRt1wvQQP5JnePNLrdNddNhe3hP18jYUY9P0RSqrO7q98GAY40SA5A6bOJRjvYnXFwa3Wq7bK3Gis34" "sYuDH1/sSwgSawIDAQAB")

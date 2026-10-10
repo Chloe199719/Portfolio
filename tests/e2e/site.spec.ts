@@ -365,6 +365,24 @@ test("visitor can register, sign out, and sign back in with a passkey", async ({
   await expect(
     page.getByRole("heading", { name: "Your account." }),
   ).toBeVisible();
+  await page.goto(`${api}/account/authenticator`);
+  await expect(
+    page.getByText("You currently sign in without an authenticator."),
+  ).toBeVisible();
+  await page
+    .getByLabel("Current password", { exact: true })
+    .fill(fixture.password);
+  await page.getByRole("button", { name: "Set up authenticator" }).click();
+  await expect(
+    page.getByRole("img", { name: "QR code to set up your authenticator" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Cancel setup" }).click();
+  await expect(
+    page.getByText("You currently sign in without an authenticator."),
+  ).toBeVisible();
+  await page
+    .getByRole("link", { name: "Back to account", exact: true })
+    .click();
   const cdp = await context.newCDPSession(page);
   await cdp.send("WebAuthn.enable");
   await cdp.send("WebAuthn.addVirtualAuthenticator", {

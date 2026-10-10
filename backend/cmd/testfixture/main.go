@@ -40,7 +40,7 @@ func main() {
 		id, email, name string
 		owner           bool
 	}{{owner, "owner@example.test", "Test owner", true}, {visitor, "visitor@example.test", "Test visitor", false}} {
-		_, e = db.Exec(ctx, `INSERT INTO accounts(id,email,name,password_hash,verified,owner,totp_secret) VALUES($1,$2,$3,$4,true,$5,$6) ON CONFLICT(id) DO UPDATE SET password_hash=$4,totp_secret=$6,totp_last=0`, a.id, a.email, a.name, string(pw), a.owner, secret)
+		_, e = db.Exec(ctx, `INSERT INTO accounts(id,email,name,password_hash,verified,owner,totp_secret,totp_confirmed) VALUES($1,$2,$3,$4,true,$5,$6,$5) ON CONFLICT(id) DO UPDATE SET password_hash=$4,totp_secret=$6,totp_confirmed=$5,totp_last=0`, a.id, a.email, a.name, string(pw), a.owner, secret)
 		if e != nil {
 			panic(e)
 		}

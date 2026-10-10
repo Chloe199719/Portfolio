@@ -77,7 +77,7 @@ func (s *Server) identityRoutes(m *http.ServeMux) {
 		http.ServeContent(w, r, "identity.css", time.Time{}, mustReadSeeker(b))
 	})
 	m.HandleFunc("GET /passkeys.js", s.passkeyScript)
-	for path, handler := range map[string]http.HandlerFunc{"/login": s.login, "/register": s.register, "/verify": s.verify, "/recover": s.recover, "/reset": s.reset, "/step-up": s.stepUp, "/account": s.account, "/logout": s.logout, "/oauth/authorize": s.authorize} {
+	for path, handler := range map[string]http.HandlerFunc{"/login": s.login, "/register": s.register, "/verify": s.verify, "/recover": s.recover, "/reset": s.reset, "/step-up": s.stepUp, "/account/authenticator": s.authenticator, "/account": s.account, "/logout": s.logout, "/oauth/authorize": s.authorize} {
 		m.HandleFunc("GET "+path, handler)
 		m.HandleFunc("POST "+path, handler)
 	}
@@ -156,7 +156,7 @@ func (s *Server) guestbook(w http.ResponseWriter, r *http.Request) {
 	owner := strings.HasPrefix(r.URL.Path, "/v1/admin/")
 	if owner {
 		s.require(w, r, true)
-		if u == nil || !u.Owner || !u.MFA {
+		if !u.authenticated() || !u.Owner {
 			return
 		}
 	}
@@ -191,7 +191,7 @@ func (s *Server) guestbookAction(w http.ResponseWriter, r *http.Request) {
 	var err error
 	key := r.PathValue("id")
 	if r.Method == "DELETE" {
-		res, e := s.DB.Exec(r.Context(), "DELETE FROM guestbook WHERE id::text=$1 AND (author_uid=$2 OR $3)", key, u.ID, u.Owner && u.MFA)
+		res, e := s.DB.Exec(r.Context(), "DELETE FROM guestbook WHERE id::text=$1 AND (author_uid=$2 OR $3)", key, u.ID, u.Owner && u.authenticated())
 		err = e
 		if e == nil && res.RowsAffected() == 0 {
 			err = problem{404, "Entry not found."}

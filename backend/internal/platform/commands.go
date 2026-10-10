@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/pquerna/otp/totp"
 	"image"
 	"os"
 	"path/filepath"
@@ -29,15 +28,11 @@ func (s *Server) Command(ctx context.Context, args []string) error {
 		if e != nil {
 			return e
 		}
-		key, e := totp.Generate(totp.GenerateOpts{Issuer: "Chloe ID", AccountName: email})
-		if e != nil {
-			return e
-		}
 		uid := id()
-		if _, e = s.DB.Exec(ctx, "INSERT INTO accounts(id,email,name,password_hash,verified,owner,totp_secret) VALUES($1,$2,$3,$4,true,true,$5)", uid, email, args[2], hashed, key.Secret()); e != nil {
+		if _, e = s.DB.Exec(ctx, "INSERT INTO accounts(id,email,name,password_hash,verified,owner) VALUES($1,$2,$3,$4,true,true)", uid, email, args[2], hashed); e != nil {
 			return e
 		}
-		fmt.Printf("Owner created: %s\nSign in at %s/login with your email and password, then scan the authenticator QR code to finish setup.\n", uid, s.C.Issuer)
+		fmt.Printf("Owner created: %s\nSign in at %s/login with your email and password, optionally enable an authenticator from your account settings.\n", uid, s.C.Issuer)
 		return nil
 	case "rotate-keys":
 		if e := s.Keys.Rotate(); e != nil {

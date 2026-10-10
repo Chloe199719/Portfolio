@@ -25,7 +25,7 @@ func (s *Server) checkTOTP(ctx context.Context, uid, secret, code string) bool {
 		return false
 	}
 	step := time.Now().Unix() / 30
-	res, e := s.DB.Exec(ctx, "UPDATE accounts SET totp_last=$2,totp_confirmed=true WHERE id=$1 AND totp_last<$2 AND totp_secret=$3", uid, step, secret)
+	res, e := s.DB.Exec(ctx, "UPDATE accounts SET totp_last=$2 WHERE id=$1 AND totp_last<$2 AND totp_secret=$3 AND totp_confirmed", uid, step, secret)
 	return e == nil && res.RowsAffected() == 1
 }
 
@@ -36,7 +36,7 @@ func (s *Server) stepUp(w http.ResponseWriter, r *http.Request) {
 	if u == nil {
 		return
 	}
-	if !u.Owner || u.MFA {
+	if !u.Authenticator || u.MFA {
 		s.finishLogin(w, r, u)
 		return
 	}
@@ -46,11 +46,11 @@ func (s *Server) stepUp(w http.ResponseWriter, r *http.Request) {
 		fail(w, e)
 		return
 	}
-	if secret == "" {
+	if secret == "" || !confirmed {
 		fail(w, problem{409, "Authenticator setup is unavailable. Ask the server administrator to complete owner enrollment."})
 		return
 	}
-	data := map[string]any{"Email": u.Email, "Setup": !confirmed}
+	data := map[string]any{"Email": u.Email, "Setup": false}
 	if r.Method == "POST" {
 		if !s.csrf(w, r) {
 			return
@@ -74,28 +74,25 @@ func (s *Server) stepUp(w http.ResponseWriter, r *http.Request) {
 			data["Error"] = "That code did not match. Enter the current six-digit code from your app."
 		}
 	}
-	title := "Two-step verification."
-	if !confirmed {
-		enrollment := url.URL{Scheme: "otpauth", Host: "totp", Path: "/Chloe ID:" + u.Email, RawQuery: url.Values{"secret": {secret}, "issuer": {"Chloe ID"}, "algorithm": {"SHA1"}, "digits": {"6"}, "period": {"30"}}.Encode()}
-		key, e := otp.NewKeyFromURL(enrollment.String())
-		if e != nil {
-			fail(w, e)
-			return
-		}
-		qr, e := key.Image(224, 224)
-		if e != nil {
-			fail(w, e)
-			return
-		}
-		var encoded bytes.Buffer
-		if e = png.Encode(&encoded, qr); e != nil {
-			fail(w, e)
-			return
-		}
-		// Only a locally generated QR image is marked safe for the data URL context.
-		data["QR"] = template.URL("data:image/png;base64," + base64.StdEncoding.EncodeToString(encoded.Bytes()))
-		data["Secret"] = secret
-		title = "Secure your account."
+	s.page(w, r, "Two-step verification.", mfaForm, data)
+}
+
+func enrollmentData(email, secret string, data map[string]any) error {
+	enrollment := url.URL{Scheme: "otpauth", Host: "totp", Path: "/Chloe ID:" + email, RawQuery: url.Values{"secret": {secret}, "issuer": {"Chloe ID"}, "algorithm": {"SHA1"}, "digits": {"6"}, "period": {"30"}}.Encode()}
+	key, e := otp.NewKeyFromURL(enrollment.String())
+	if e != nil {
+		return e
 	}
-	s.page(w, r, title, mfaForm, data)
+	qr, e := key.Image(224, 224)
+	if e != nil {
+		return e
+	}
+	var encoded bytes.Buffer
+	if e = png.Encode(&encoded, qr); e != nil {
+		return e
+	}
+	// Only a locally generated QR image is marked safe for the data URL context.
+	data["QR"] = template.URL("data:image/png;base64," + base64.StdEncoding.EncodeToString(encoded.Bytes()))
+	data["Secret"] = secret
+	return nil
 }

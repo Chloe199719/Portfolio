@@ -21,7 +21,7 @@ func (u *passkeyUser) WebAuthnDisplayName() string                { return u.Nam
 func (u *passkeyUser) WebAuthnCredentials() []webauthn.Credential { return u.Keys }
 func (s *Server) loadPasskeyUser(r *http.Request, uid string) (*passkeyUser, error) {
 	u := &passkeyUser{}
-	e := s.DB.QueryRow(r.Context(), "SELECT id,name,email,verified,owner FROM accounts WHERE id=$1 AND verified", uid).Scan(&u.ID, &u.Name, &u.Email, &u.Verified, &u.Owner)
+	e := s.DB.QueryRow(r.Context(), "SELECT id,name,email,verified,owner,totp_confirmed FROM accounts WHERE id=$1 AND verified", uid).Scan(&u.ID, &u.Name, &u.Email, &u.Verified, &u.Owner, &u.Authenticator)
 	if e != nil {
 		return nil, e
 	}
@@ -63,7 +63,7 @@ func (s *Server) passkeyAction(w http.ResponseWriter, r *http.Request) {
 			if u == nil {
 				return
 			}
-			if u.Owner && !u.MFA {
+			if !u.authenticated() {
 				fail(w, problem{403, "Verify your additional factor first."})
 				return
 			}
@@ -115,7 +115,7 @@ func (s *Server) passkeyAction(w http.ResponseWriter, r *http.Request) {
 		if u == nil {
 			return
 		}
-		if u.ID != uid {
+		if u.ID != uid || !u.authenticated() {
 			fail(w, problem{403, "Account changed during passkey registration."})
 			return
 		}
@@ -159,7 +159,7 @@ func (s *Server) passkeyAction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	next := "/login"
-	if u.Owner {
+	if u.Authenticator {
 		next = "/step-up"
 	}
 	next += "?flow=" + url.QueryEscape(r.URL.Query().Get("flow")) + "&continue=" + url.QueryEscape(r.URL.Query().Get("continue"))

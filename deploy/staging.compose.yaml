@@ -15,12 +15,16 @@ services:
       FRONTEND_ORIGINS: https://${FRONTEND_HOST}
       API_URL: https://${API_HOST:?Set the staging API hostname}
       ISSUER_URL: https://${AUTH_HOST:?Set the staging identity hostname}
-      REGISTRATION_ENABLED: "false"
+      REGISTRATION_ENABLED: ${REGISTRATION_ENABLED:-false}
+      SMTP_ADDR: mail.staging.chloepratas.com:587
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      MAIL_FROM: ${MAIL_FROM:-}
       GOMEMLIMIT: 96MiB
       GOMAXPROCS: "1"
     ports: ["127.0.0.1:18080:8080"]
     volumes: [backend_data:/data]
-    networks: [web, database]
+    networks: [web, database, mail]
     depends_on:
       db: { condition: service_healthy }
     restart: unless-stopped
@@ -82,10 +86,60 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  mail:
+    profiles: [mail]
+    image: ghcr.io/docker-mailserver/docker-mailserver:16.0.1@sha256:d0fe7668defe157aad57ea31b1707ad1e2fb57d7a91bdf17cbdf876549946c86
+    hostname: mail.staging.chloepratas.com
+    environment:
+      SSL_TYPE: manual
+      SSL_CERT_PATH: /srv/tls/mail.staging.chloepratas.com.crt
+      SSL_KEY_PATH: /srv/tls/mail.staging.chloepratas.com.key
+      ENABLE_RSPAMD: 0
+      ENABLE_CLAMAV: 0
+      ENABLE_AMAVIS: 0
+      ENABLE_SPAMASSASSIN: 0
+      ENABLE_OPENDKIM: 1
+      ENABLE_OPENDMARC: 1
+      ENABLE_POLICYD_SPF: 1
+      ENABLE_FAIL2BAN: 0
+      PERMIT_DOCKER: none
+      SPOOF_PROTECTION: 1
+      POSTMASTER_ADDRESS: postmaster@notify.staging.chloepratas.com
+      POSTFIX_INET_PROTOCOLS: ipv4
+      DOVECOT_INET_PROTOCOLS: ipv4
+    # Submission stays on the private Docker network; only bounce reception is public.
+    ports: ["25:25"]
+    volumes:
+      - mail_data:/var/mail
+      - mail_state:/var/mail-state
+      - mail_logs:/var/log/mail
+      - ./mail-config:/tmp/docker-mailserver
+      - /opt/vaultwarden/caddy-data/caddy/certificates/acme-v02.api.letsencrypt.org-directory/mail.staging.chloepratas.com:/srv/tls:ro
+    networks:
+      mail:
+        aliases: [mail.staging.chloepratas.com]
+    restart: unless-stopped
+    mem_limit: 256m
+    memswap_limit: 512m
+    cpus: 0.5
+    pids_limit: 256
+    logging:
+      driver: json-file
+      options: { max-size: 10m, max-file: "3" }
+    healthcheck:
+      test: [CMD-SHELL, "ss --listening --tcp | grep -q ':smtp ' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
 volumes:
   postgres:
+  mail_data:
+  mail_state:
+  mail_logs:
   backend_data:
 networks:
   web:
+  mail:
   database:
     internal: true

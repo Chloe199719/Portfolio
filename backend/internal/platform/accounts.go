@@ -16,15 +16,16 @@ import (
 )
 
 type User struct {
-	ID          string    `json:"uid"`
-	Name        string    `json:"name"`
-	Email       string    `json:"email"`
-	Owner       bool      `json:"owner"`
-	MFA         bool      `json:"mfa"`
-	SessionHash string    `json:"-"`
-	Verified    bool      `json:"verified"`
-	Credentials []byte    `json:"-"`
-	AuthTime    time.Time `json:"-"`
+	ID            string    `json:"uid"`
+	Name          string    `json:"name"`
+	Email         string    `json:"email"`
+	Owner         bool      `json:"owner"`
+	MFA           bool      `json:"mfa"`
+	Authenticator bool      `json:"authenticatorEnabled"`
+	SessionHash   string    `json:"-"`
+	Verified      bool      `json:"verified"`
+	Credentials   []byte    `json:"-"`
+	AuthTime      time.Time `json:"-"`
 }
 
 func (s *Server) user(r *http.Request, kind string) *User {
@@ -33,12 +34,16 @@ func (s *Server) user(r *http.Request, kind string) *User {
 		return nil
 	}
 	u := &User{}
-	e := s.DB.QueryRow(r.Context(), `SELECT a.id,a.name,a.email,a.owner,a.verified,s.mfa,s.hash,s.created_at FROM sessions s JOIN accounts a ON a.id=s.account_id WHERE s.hash=$1 AND s.kind=$2 AND s.expires_at>now()`, hash(v), kind).Scan(&u.ID, &u.Name, &u.Email, &u.Owner, &u.Verified, &u.MFA, &u.SessionHash, &u.AuthTime)
+	e := s.DB.QueryRow(r.Context(), `SELECT a.id,a.name,a.email,a.owner,a.verified,s.mfa,a.totp_confirmed,s.hash,s.created_at FROM sessions s JOIN accounts a ON a.id=s.account_id WHERE s.hash=$1 AND s.kind=$2 AND s.expires_at>now()`, hash(v), kind).Scan(&u.ID, &u.Name, &u.Email, &u.Owner, &u.Verified, &u.MFA, &u.Authenticator, &u.SessionHash, &u.AuthTime)
 	if e != nil {
 		return nil
 	}
 	return u
 }
+func (u *User) authenticated() bool {
+	return u != nil && u.Verified && (!u.Authenticator || u.MFA)
+}
+
 func (s *Server) require(w http.ResponseWriter, r *http.Request, owner bool) *User {
 	u := s.user(r, "api")
 	if u == nil {
@@ -49,8 +54,12 @@ func (s *Server) require(w http.ResponseWriter, r *http.Request, owner bool) *Us
 		fail(w, problem{403, "Verify your email first."})
 		return nil
 	}
-	if owner && (!u.Owner || !u.MFA) {
-		fail(w, problem{403, "Owner access requires an additional authentication factor."})
+	if !u.authenticated() {
+		fail(w, problem{403, "Verify your additional authentication factor."})
+		return nil
+	}
+	if owner && !u.Owner {
+		fail(w, problem{403, "Owner access is required."})
 		return nil
 	}
 	return u
@@ -58,11 +67,11 @@ func (s *Server) require(w http.ResponseWriter, r *http.Request, owner bool) *Us
 func (s *Server) newSession(w http.ResponseWriter, r *http.Request, uid, kind string, mfa bool) error {
 	lifetime := 5 * 24 * time.Hour
 	if kind == "identity" && !mfa {
-		var owner bool
-		if e := s.DB.QueryRow(r.Context(), "SELECT owner FROM accounts WHERE id=$1", uid).Scan(&owner); e != nil {
+		var enabled bool
+		if e := s.DB.QueryRow(r.Context(), "SELECT totp_confirmed FROM accounts WHERE id=$1", uid).Scan(&enabled); e != nil {
 			return e
 		}
-		if owner {
+		if enabled {
 			lifetime = 10 * time.Minute
 		}
 	}
@@ -104,7 +113,7 @@ func (s *Server) session(w http.ResponseWriter, r *http.Request) {
 	}
 	u := s.user(r, "api")
 	if u != nil {
-		u.Owner = u.Owner && u.MFA
+		u.Owner = u.Owner && u.authenticated()
 	}
 	send(w, 200, map[string]any{"user": u, "csrf": s.csrfToken(w, r), "configured": true, "authUrl": s.C.Issuer, "registration": s.C.Registration})
 }
@@ -211,7 +220,7 @@ const loginForm = `<p class="muted">One account for this site and your connected
 
 func (s *Server) login(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" && r.FormValue("reauth") != "true" {
-		if u := s.user(r, "identity"); u != nil && u.Verified && (!u.Owner || u.MFA) {
+		if u := s.user(r, "identity"); u.authenticated() {
 			s.finishLogin(w, r, u)
 			return
 		}
@@ -419,11 +428,15 @@ func (s *Server) identityUser(w http.ResponseWriter, r *http.Request) *User {
 	return u
 }
 func (s *Server) completeIdentity(w http.ResponseWriter, r *http.Request, u *User) {
+	if e := s.DB.QueryRow(r.Context(), "SELECT totp_confirmed FROM accounts WHERE id=$1", u.ID).Scan(&u.Authenticator); e != nil {
+		fail(w, e)
+		return
+	}
 	if e := s.newSession(w, r, u.ID, "identity", false); e != nil {
 		fail(w, e)
 		return
 	}
-	if u.Owner {
+	if u.Authenticator {
 		http.Redirect(w, r, "/step-up?flow="+url.QueryEscape(r.FormValue("flow"))+"&continue="+url.QueryEscape(r.FormValue("continue")), 303)
 		return
 	}

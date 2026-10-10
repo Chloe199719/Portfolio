@@ -89,7 +89,7 @@ func (s *Server) authorize(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	if u == nil || !u.Verified || u.Owner && !u.MFA {
+	if !u.authenticated() {
 		if ar.GetRequestForm().Get("prompt") == "none" {
 			s.OAuth.WriteAuthorizeError(ctx, w, ar, fosite.ErrLoginRequired)
 			return

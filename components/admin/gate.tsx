@@ -16,7 +16,7 @@ export function AdminGate() {
     <div className="shell page-bottom admin">
       <PageHeading eyebrow="Owner access" title="Make this space yours.">
         <p>
-          Sign in with your owner account and authenticator to publish and
+          Sign in with your owner account to publish and
           manage your website.
         </p>
       </PageHeading>
@@ -28,7 +28,7 @@ export function AdminGate() {
       {session.user && (
         <p className="form-error" role="alert">
           This account does not have owner access. Sign in again with your
-          additional factor.
+          authenticator if you have enabled one.
         </p>
       )}
       {session.error && (

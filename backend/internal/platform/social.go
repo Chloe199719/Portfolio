@@ -154,7 +154,7 @@ func (s *Server) socialCallback(w http.ResponseWriter, r *http.Request) {
 		if u == nil {
 			return
 		}
-		if u.ID != linkUID {
+		if u.ID != linkUID || !u.authenticated() {
 			fail(w, problem{403, "Sign in to the original account before linking."})
 			return
 		}

@@ -87,8 +87,8 @@ func (s *Server) accountAPI(w http.ResponseWriter, r *http.Request) {
 	if u == nil {
 		return
 	}
-	if u.Owner && !u.MFA {
-		fail(w, problem{403, "Owner account access requires an additional factor."})
+	if !u.authenticated() {
+		fail(w, problem{403, "Verify your additional factor first."})
 		return
 	}
 	ctx := r.Context()

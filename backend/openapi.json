@@ -3249,6 +3249,9 @@
           },
           "mfa": {
             "type": "boolean"
+          },
+          "authenticatorEnabled": {
+            "type": "boolean"
           }
         },
         "required": ["uid", "name", "owner"],

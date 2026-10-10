@@ -67,7 +67,7 @@ func setup(t *testing.T) *harness {
 	jar, _ := cookiejar.New(nil)
 	client := &http.Client{Jar: jar, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}
 	x := &harness{s: s, http: h, client: client, owner: id(), visitor: id()}
-	_, e = s.DB.Exec(ctx, "INSERT INTO accounts(id,email,name,verified,owner) VALUES($1,'owner@example.test','Owner',true,true),($2,'visitor@example.test','Visitor',true,false)", x.owner, x.visitor)
+	_, e = s.DB.Exec(ctx, "INSERT INTO accounts(id,email,name,verified,owner,totp_confirmed) VALUES($1,'owner@example.test','Owner',true,true,true),($2,'visitor@example.test','Visitor',true,false,false)", x.owner, x.visitor)
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -271,21 +271,12 @@ func TestLocalAuthenticationAndOwnerMFA(t *testing.T) {
 	res = h.call(t, "GET", "/step-up", nil)
 	body, _ = io.ReadAll(res.Body)
 	res.Body.Close()
-	if !strings.Contains(string(body), "data:image/png;base64,") || !strings.Contains(string(body), "Finish setup") {
-		t.Fatal("first-time enrollment did not show a QR code")
+	if strings.Contains(string(body), "data:image/png") {
+		t.Fatal("confirmed enrollment exposed its key")
 	}
 	status(t, h.form(t, "/step-up", url.Values{"otp": {"invalid"}}), 200)
-	var confirmed bool
-	_ = h.s.DB.QueryRow(ctx, "SELECT totp_confirmed FROM accounts WHERE id=$1", h.owner).Scan(&confirmed)
-	if confirmed {
-		t.Fatal("invalid code confirmed enrollment")
-	}
 	otp, _ := totp.GenerateCode(key.Secret(), time.Now())
 	status(t, h.form(t, "/step-up", url.Values{"otp": {otp}}), 303)
-	_ = h.s.DB.QueryRow(ctx, "SELECT totp_confirmed FROM accounts WHERE id=$1", h.owner).Scan(&confirmed)
-	if !confirmed {
-		t.Fatal("successful code did not confirm enrollment")
-	}
 	status(t, h.call(t, "GET", "/account", nil), 200)
 	if h.s.checkTOTP(ctx, h.owner, key.Secret(), otp) {
 		t.Fatal("MFA code was replayable")

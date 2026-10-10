@@ -373,6 +373,7 @@ export interface components {
             owner: boolean;
             verified?: boolean;
             mfa?: boolean;
+            authenticatorEnabled?: boolean;
         };
         Session: {
             user: components["schemas"]["User"] | null;

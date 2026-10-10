@@ -161,7 +161,7 @@ func (s *Server) mediaFile(w http.ResponseWriter, r *http.Request) {
 	}
 	if !public {
 		u := s.user(r, "api")
-		if u == nil || !u.Owner || !u.MFA {
+		if !u.authenticated() || !u.Owner {
 			http.NotFound(w, r)
 			return
 		}
