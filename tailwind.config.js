@@ -4,11 +4,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        paper: "#171917",
-        ink: "#f1f2e9",
-        muted: "#a8aea1",
-        rose: "#c5ef78",
-        line: "#383d34",
+        paper: "#191516",
+        ink: "#f5eeee",
+        muted: "#bba5a7",
+        rose: "#e76a6a",
+        line: "#483337",
       },
       fontFamily: {
         sans: ["Manrope Variable", "sans-serif"],

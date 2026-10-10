@@ -1,7 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { request, mutate, useSession } from "@/lib/client-api";
+import { request, mutate, type useSession } from "@/lib/client-api";
 import type { ContentType, GuestEntry } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 import { AuthControls } from "@/components/interactive/auth-controls";
@@ -34,9 +33,11 @@ type Message = {
   created_at: string;
   is_read: boolean;
 };
-export function Dashboard() {
-  const router = useRouter();
-  const session = useSession();
+export function Dashboard({
+  session,
+}: {
+  session: ReturnType<typeof useSession>;
+}) {
   const [tab, setTab] = useState("content");
   const [docs, setDocs] = useState<Editable[]>([]);
   const [selected, setSelected] = useState<Editable | null>(null);
@@ -85,9 +86,6 @@ export function Dashboard() {
     }, 200);
     return () => clearTimeout(timer);
   }, [reload]);
-  useEffect(() => {
-    if (!session.loading && !session.user?.owner) router.refresh();
-  }, [session.loading, session.user, router]);
   function navigate(action: () => void) {
     if (dirty) setPending(() => action);
     else action();
@@ -115,10 +113,7 @@ export function Dashboard() {
         <AuthControls
           user={session.user}
           configured={session.configured}
-          onChange={async () => {
-            await session.refresh();
-            router.refresh();
-          }}
+          onChange={session.refresh}
         />
       </div>
       <div

@@ -348,6 +348,49 @@ test("identity round trip and browser passkey registration", async ({
     "Account updated",
   );
   await auth.close();
+
+  // A failed logout must keep the session visible and allow a retry.
+  await page.route(`${api}/v1/session`, async (route) => {
+    if (route.request().method() === "DELETE")
+      await route.fulfill({
+        status: 503,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "Sign-out is temporarily unavailable." }),
+      });
+    else await route.continue();
+  });
+  await page.getByRole("button", { name: "Sign out", exact: true }).click();
+  await expect(page.locator(".auth-controls").getByRole("alert")).toContainText(
+    "Sign-out is temporarily unavailable.",
+  );
+  await expect(
+    page.getByRole("tablist", { name: "Dashboard sections" }),
+  ).toBeVisible();
+  await page.unroute(`${api}/v1/session`);
+
+  await page.getByRole("button", { name: "Sign out", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Sign in with Chloe ID" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("tablist", { name: "Dashboard sections" }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "Create note", exact: true }),
+  ).toHaveCount(0);
+  expect((await context.request.get(`${api}/v1/admin/content`)).status()).toBe(
+    401,
+  );
+  expect(
+    (await (await context.request.get(`${api}/v1/session`)).json()).user,
+  ).toBeNull();
+  await page.reload();
+  await expect(
+    page.getByRole("button", { name: "Sign in with Chloe ID" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("tablist", { name: "Dashboard sections" }),
+  ).toHaveCount(0);
 });
 
 test("visitor can register, sign out, and sign back in with a passkey", async ({

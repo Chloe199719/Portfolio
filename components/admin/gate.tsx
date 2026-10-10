@@ -11,13 +11,13 @@ export function AdminGate() {
         <div className="skeleton h-40" aria-label="Checking your session" />
       </div>
     );
-  if (session.user?.owner) return <Dashboard />;
+  if (session.user?.owner)
+    return <Dashboard key={session.user.uid} session={session} />;
   return (
     <div className="shell page-bottom admin">
       <PageHeading eyebrow="Owner access" title="Make this space yours.">
         <p>
-          Sign in with your owner account to publish and
-          manage your website.
+          Sign in with your owner account to publish and manage your website.
         </p>
       </PageHeading>
       <AuthControls

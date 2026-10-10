@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { SessionUser } from "./types";
 import { apiClient } from "./generated-client";
 import { apiBase, readOnly } from "./api-config";
@@ -107,8 +107,11 @@ export function useSession() {
   const [loading, setLoading] = useState(true);
   const [configured, setConfigured] = useState(false);
   const [error, setError] = useState("");
+  const generation = useRef(0);
   const refresh = useCallback(async () => {
+    const current = ++generation.current;
     if (!apiBase || readOnly) {
+      setUser(null);
       setConfigured(false);
       setLoading(false);
       return;
@@ -118,17 +121,31 @@ export function useSession() {
         user: SessionUser | null;
         configured: boolean;
       }>("/v1/session");
+      if (current !== generation.current) return;
       setUser(data.user);
       setConfigured(data.configured);
       setError("");
     } catch (e) {
+      if (current !== generation.current) return;
+      setUser(null);
       setError(e instanceof Error ? e.message : "Could not check sign-in.");
     } finally {
-      setLoading(false);
+      if (current === generation.current) setLoading(false);
     }
   }, []);
   useEffect(() => {
     void refresh();
+    const recheck = () => {
+      if (document.visibilityState === "visible") void refresh();
+    };
+    window.addEventListener("focus", recheck);
+    window.addEventListener("pageshow", recheck);
+    document.addEventListener("visibilitychange", recheck);
+    return () => {
+      window.removeEventListener("focus", recheck);
+      window.removeEventListener("pageshow", recheck);
+      document.removeEventListener("visibilitychange", recheck);
+    };
   }, [refresh]);
   return { user, loading, configured, error, refresh };
 }

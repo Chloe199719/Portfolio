@@ -13,13 +13,13 @@ export default function Image() {
         flexDirection: "column",
         justifyContent: "space-between",
         padding: "65px 80px",
-        background: "#171917",
-        color: "#f1f2e9",
+        background: "#191516",
+        color: "#f5eeee",
         fontFamily: "sans-serif",
       }}
     >
       <div style={{ display: "flex", fontSize: 55 }}>
-        chloe<span style={{ color: "#c5ef78" }}>.</span>
+        chloe<span style={{ color: "#e76a6a" }}>.</span>
       </div>
       <div
         style={{
@@ -30,9 +30,9 @@ export default function Image() {
         }}
       >
         <span>Software, side quests,</span>
-        <span style={{ color: "#c5ef78" }}>and everything in between.</span>
+        <span style={{ color: "#e76a6a" }}>and everything in between.</span>
       </div>
-      <div style={{ display: "flex", fontSize: 21, color: "#a8aea1" }}>
+      <div style={{ display: "flex", fontSize: 21, color: "#bba5a7" }}>
         Chloe Pratas · Software engineer & curious human
       </div>
     </div>,

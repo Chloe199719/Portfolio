@@ -5,11 +5,11 @@
 @layer base {
   :root {
     color-scheme: dark;
-    --paper: #171917;
-    --ink: #f1f2e9;
-    --rose: #c5ef78;
-    --muted: #a8aea1;
-    --line: #383d34;
+    --paper: #191516;
+    --ink: #f5eeee;
+    --rose: #e76a6a;
+    --muted: #bba5a7;
+    --line: #483337;
   }
   * {
     box-sizing: border-box;
@@ -23,7 +23,7 @@
     margin: 0;
   }
   ::selection {
-    background: #3d522e;
+    background: #67333b;
   }
   button,
   a,
@@ -83,7 +83,7 @@
   }
   input::placeholder,
   textarea::placeholder {
-    color: #878178;
+    color: #ad9296;
   }
   input:focus,
   textarea:focus,
@@ -113,7 +113,7 @@
     border-radius: 3px;
   }
   .button:hover {
-    background: #d6f69c;
+    background: #f08b87;
   }
   .button svg {
     width: 17px;
@@ -123,7 +123,7 @@
     @apply border border-line bg-transparent text-ink;
   }
   .button-outline:hover {
-    background: #2b3028;
+    background: #342428;
   }
   .text-link {
     @apply inline-flex items-center gap-3 font-sans text-[13px] font-medium;
@@ -143,7 +143,7 @@
     @apply flex min-h-11 min-w-11 items-center justify-center border border-line;
   }
   .icon-button:hover {
-    background: #2b3028;
+    background: #342428;
   }
   .icon-button svg {
     width: 19px;
@@ -180,7 +180,7 @@
   }
   .nav-popover {
     @apply absolute right-0 top-9 flex min-w-40 flex-col gap-5 border border-line bg-paper p-5;
-    box-shadow: 0 8px 20px #f1f2e90d;
+    box-shadow: 0 8px 20px #f5eeee0d;
   }
   .header-contact {
     @apply flex items-center gap-3 border-b border-ink pb-1 text-[12px] font-medium;
@@ -218,9 +218,9 @@
     transform: rotate(3deg);
   }
   .portrait-mat {
-    background: #272c24;
+    background: #2c2023;
     padding: 13px 13px 0;
-    box-shadow: 0 12px 25px #5d4a3012;
+    box-shadow: 0 12px 25px #672a3512;
   }
   .portrait-image {
     width: 100%;
@@ -252,7 +252,7 @@
   .intro-strip svg {
     width: 10px;
     height: 10px;
-    color: #a19b90;
+    color: #b39b9e;
   }
   .section-space {
     @apply py-16 md:py-24;
@@ -273,13 +273,13 @@
     @apply relative flex aspect-[1.35] items-center overflow-hidden px-6 pt-12 md:px-9 md:pt-14;
   }
   .project-tone-0 {
-    background: #292d27;
+    background: #2c2023;
   }
   .project-tone-1 {
-    background: #242b26;
+    background: #251d20;
   }
   .project-tone-2 {
-    background: #2c2e24;
+    background: #342226;
   }
   .project-index {
     @apply absolute left-6 top-6 text-[8px] tracking-[.17em] text-muted md:left-9;
@@ -289,7 +289,7 @@
     height: auto;
     max-height: 85%;
     object-fit: contain;
-    box-shadow: 0 10px 20px #f1f2e912;
+    box-shadow: 0 10px 20px #f5eeee12;
     transition: transform 0.4s;
   }
   .project-visual:hover .project-shot {
@@ -326,26 +326,26 @@
     @apply mb-7 mt-6 max-w-[320px] text-[13px] leading-[1.9] text-muted;
   }
   .contact-sheet {
-    background: #262c23;
+    background: #2b1e22;
     padding: 27px;
     transform: rotate(-2deg);
   }
   .viewfinder {
     @apply relative flex min-h-[290px] flex-col items-center justify-center gap-6;
-    border: 1px solid #c9c6ba;
+    border: 1px solid #d2bfc1;
   }
   .viewfinder svg {
     height: 45px;
     width: 45px;
     stroke-width: 1;
-    color: #8b8979;
+    color: #ac8c93;
   }
   .viewfinder-label {
     position: absolute;
     top: 22px;
     font-size: 8px;
     letter-spacing: 0.2em;
-    color: #757367;
+    color: #b0959b;
   }
   .viewfinder-caption {
     @apply font-serif text-[24px] italic text-muted;
@@ -355,7 +355,7 @@
     position: absolute;
     width: 14px;
     height: 14px;
-    border-color: #8b8979;
+    border-color: #ac8c93;
   }
   .tl {
     top: -1px;
@@ -452,7 +452,7 @@
     color: var(--rose);
   }
   .guestbook-invite {
-    @apply relative mb-20 overflow-hidden bg-[#283122] px-7 py-12 md:mb-28 md:px-12 md:py-14;
+    @apply relative mb-20 overflow-hidden bg-[#352328] px-7 py-12 md:mb-28 md:px-12 md:py-14;
   }
   .guestbook-invite > div {
     @apply mt-6 flex flex-wrap items-end justify-between gap-8;
@@ -464,7 +464,7 @@
     color: var(--rose);
   }
   .invite-mark {
-    @apply absolute -right-6 -top-9 h-40 w-40 text-[#d9bfc0];
+    @apply absolute -right-6 -top-9 h-40 w-40 text-[#d7a3a9];
     transform: rotate(13deg);
     pointer-events: none;
   }
@@ -517,7 +517,7 @@
   }
   .detail-cover {
     margin: 0 0 50px;
-    background: #292d27;
+    background: #2c2023;
     padding: 24px;
   }
   .detail-cover img {
@@ -574,7 +574,7 @@
   }
   .about-portrait {
     padding: 12px;
-    background: #272c24;
+    background: #2c2023;
     transform: rotate(-2deg);
   }
   .about-portrait img {
@@ -645,7 +645,7 @@
     @apply mt-4 text-sm leading-relaxed text-rose;
   }
   .form-success {
-    @apply mt-4 text-sm leading-relaxed text-[#38634c];
+    @apply mt-4 text-sm leading-relaxed text-[#e76a6a];
   }
   .honeypot {
     position: absolute;
@@ -682,7 +682,7 @@
     @apply font-sans text-sm font-semibold;
   }
   .guest-avatar {
-    @apply flex h-10 w-10 items-center justify-center bg-[#333b2c] font-serif text-xl;
+    @apply flex h-10 w-10 items-center justify-center bg-[#40282f] font-serif text-xl;
   }
   .entry-status {
     @apply mt-5 block text-[10px] text-muted;
@@ -727,12 +727,12 @@
     @apply flex justify-between gap-4;
   }
   .gallery-empty {
-    @apply relative flex min-h-[400px] items-center gap-14 bg-[#262c23] px-8 py-14 md:px-16;
+    @apply relative flex min-h-[400px] items-center gap-14 bg-[#2b1e22] px-8 py-14 md:px-16;
   }
   .gallery-empty > svg {
     width: 100px;
     height: 100px;
-    color: #9b998c;
+    color: #b69ca2;
     stroke-width: 1;
   }
   .gallery-empty h2 {
@@ -751,12 +751,12 @@
     height: 100%;
     margin: 0;
     border: 0;
-    background: #242320f5;
+    background: #21181bf5;
     color: var(--ink);
     padding: 40px;
   }
   .lightbox::backdrop {
-    background: #242320e8;
+    background: #21181be8;
   }
   .lightbox-close {
     position: fixed;
@@ -794,7 +794,7 @@
   .lightbox-caption p,
   .lightbox-caption span {
     font-size: 12px;
-    color: #ddd7ca;
+    color: #e0cdd0;
   }
   .playground-layout {
     @apply grid items-start gap-12 md:grid-cols-[.85fr_1.15fr] md:gap-20;
@@ -809,7 +809,7 @@
     @apply max-w-sm leading-[1.8] text-muted;
   }
   .memory-game {
-    background: #22271f;
+    background: #261b1f;
     padding: 24px;
   }
   .game-toolbar {
@@ -836,8 +836,8 @@
   }
   .memory-tile {
     aspect-ratio: 1;
-    background: #333b2c;
-    border: 1px solid #46533a;
+    background: #40282f;
+    border: 1px solid #6b414c;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -846,19 +846,19 @@
     opacity: 1;
   }
   .memory-tile:hover:not(:disabled) {
-    background: #414d36;
+    background: #56323e;
   }
   .memory-tile.revealed {
-    background: #171917;
+    background: #191516;
   }
   .memory-tile.matched {
-    background: #354625;
-    border-color: #80a758;
+    background: #562932;
+    border-color: #b96370;
   }
   .tile-back {
     font-family: "Space Grotesk Variable", sans-serif;
     font-size: 32px;
-    color: #a8bf87;
+    color: #d29fa9;
   }
   .tile-shape {
     width: 35%;
@@ -918,7 +918,7 @@
     margin-top: 18px;
   }
   .skeleton {
-    background: #30352c;
+    background: #38292e;
     animation: skeleton-fade 1.4s ease-in-out infinite alternate;
   }
   .admin {
@@ -967,7 +967,7 @@
     @apply border-b border-line px-3 py-4 text-left text-xs;
   }
   .admin-list > button[aria-current] {
-    background: #30382a;
+    background: #442a32;
   }
   .admin-list small {
     @apply mt-1 block text-[10px] text-muted;
@@ -997,7 +997,7 @@
     @apply px-3 py-2 text-xs;
   }
   .rich-toolbar button:hover {
-    background: #30382a;
+    background: #442a32;
   }
   .rich-editable {
     min-height: 260px;
@@ -1026,7 +1026,7 @@
     width: 100%;
     height: 160px;
     object-fit: contain;
-    background: #272c24;
+    background: #2c2023;
   }
   .check-label {
     @apply flex-row items-center gap-3;
@@ -1055,7 +1055,7 @@
     @apply mt-3 text-sm leading-relaxed text-muted;
   }
   .preview-banner {
-    @apply border-y border-rose bg-[#283122] px-6 py-4 text-center text-sm;
+    @apply border-y border-rose bg-[#352328] px-6 py-4 text-center text-sm;
   }
 }
 @keyframes skeleton-fade {
@@ -1196,7 +1196,7 @@
   }
   .button-outline:hover {
     color: var(--ink);
-    background: #2b3028;
+    background: #342428;
   }
   .play-hero {
     display: grid;
@@ -1323,7 +1323,7 @@
     font-size: 13px;
   }
   .project-shot {
-    box-shadow: 0 15px 35px #11171044;
+    box-shadow: 0 15px 35px #1c0c1144;
   }
   .project-arrow {
     border-radius: 3px;
@@ -1369,7 +1369,7 @@
     top: 5px;
     font-size: 200px;
     line-height: 1;
-    color: #384331;
+    color: #4d2832;
     z-index: -1;
     transform: rotate(15deg);
   }
@@ -1383,10 +1383,10 @@
     color: var(--rose);
   }
   .form-error {
-    color: #f6ad93;
+    color: #f4aaa1;
   }
   .inline-confirm {
-    background: #2d3328;
+    background: #3d262e;
   }
   .media-grid {
     display: grid;
@@ -1401,7 +1401,7 @@
     width: 100%;
     height: 145px;
     object-fit: contain;
-    background: #23271f;
+    background: #2c1e24;
   }
   .media-record label {
     margin-top: 12px;

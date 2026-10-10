@@ -32,10 +32,7 @@ export async function Footer() {
               </a>
             ))}
           </nav>
-          <div className="flex gap-5">
-            <Link href="/privacy">Privacy</Link>
-            <Link href="/admin">Owner sign-in</Link>
-          </div>
+          <Link href="/privacy">Privacy</Link>
         </div>
       </div>
     </footer>

@@ -2,7 +2,7 @@
 
 A Next.js 16 / React 19 / TypeScript frontend for **Vercel**, backed by a separate **Go service and PostgreSQL on Linode**. The Go service owns content, account screens, sessions, OAuth/OIDC, uploads, moderation, and durable jobs. There is no Firebase, Sanity, or database connection in the frontend.
 
-The public site includes project stories, notes and RSS, photography, About, Now, a memory game, a moderated guestbook, and a private contact inbox. The dark design uses charcoal, warm white, electric lime, Space Grotesk, and Manrope. Empty homepage collections stay hidden. Only preserved content and supplied images are published by default.
+The public site includes project stories, notes and RSS, photography, About, Now, a memory game, a moderated guestbook, and a private contact inbox. The dark design uses warm charcoal, warm white, cherry red, Space Grotesk, and Manrope. Empty homepage collections stay hidden. Only preserved content and supplied images are published by default.
 
 ## Local development
 
