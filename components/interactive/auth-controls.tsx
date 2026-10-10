@@ -42,7 +42,7 @@ export function AuthControls({
               }
             }}
           >
-            Sign out <ExitIcon />
+            Sign out of website <ExitIcon />
           </button>
         </div>
       ) : (
@@ -69,6 +69,16 @@ export function AuthControls({
                 : "Use your account, Google, GitHub, or a passkey."}
           </p>
         </>
+      )}
+      {configured && !readOnly && (
+        <div className="mt-4">
+          <a className="text-link text-xs" href={`${authBase}/logout`}>
+            Sign out of Chloe ID <ExitIcon />
+          </a>
+          <p className="form-help">
+            End your Chloe ID session in this browser.
+          </p>
+        </div>
       )}
       {error && (
         <p role="alert" className="form-error">

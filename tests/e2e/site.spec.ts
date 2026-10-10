@@ -359,7 +359,9 @@ test("identity round trip and browser passkey registration", async ({
       });
     else await route.continue();
   });
-  await page.getByRole("button", { name: "Sign out", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Sign out of website", exact: true })
+    .click();
   await expect(page.locator(".auth-controls").getByRole("alert")).toContainText(
     "Sign-out is temporarily unavailable.",
   );
@@ -368,7 +370,9 @@ test("identity round trip and browser passkey registration", async ({
   ).toBeVisible();
   await page.unroute(`${api}/v1/session`);
 
-  await page.getByRole("button", { name: "Sign out", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Sign out of website", exact: true })
+    .click();
   await expect(
     page.getByRole("button", { name: "Sign in with Chloe ID" }),
   ).toBeVisible();
@@ -391,6 +395,32 @@ test("identity round trip and browser passkey registration", async ({
   await expect(
     page.getByRole("tablist", { name: "Dashboard sections" }),
   ).toHaveCount(0);
+  // Website logout keeps SSO available until Chloe ID is explicitly signed out.
+  await page.getByRole("button", { name: "Sign in with Chloe ID" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Behind the scenes." }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Sign out of website", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Sign in with Chloe ID" }),
+  ).toBeVisible();
+  await page.screenshot({ path: "test-results/chloe-id-sign-out-desktop.png" });
+  await page
+    .getByRole("link", { name: "Sign out of Chloe ID", exact: true })
+    .click();
+  await expect(page).toHaveURL(`${api}/logout`);
+  await expect(page.getByRole("heading", { name: "Sign out?" })).toBeVisible();
+  await page.getByRole("button", { name: "Sign out", exact: true }).click();
+  await expect(page).toHaveURL(`${site}/`);
+  await page.goto("/admin");
+  await page.getByRole("button", { name: "Sign in with Chloe ID" }).click();
+  await expect(page).toHaveURL(
+    (url) => url.origin === api && url.pathname === "/login",
+  );
+  await expect(page.getByLabel("Email", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("Password", { exact: true })).toBeVisible();
 });
 
 test("visitor can register, sign out, and sign back in with a passkey", async ({
