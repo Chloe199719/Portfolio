@@ -1,0 +1,8 @@
+# Append only this site to the existing shared Caddyfile.
+mail.staging.chloepratas.com {
+    tls {
+        ca https://acme-v02.api.letsencrypt.org/directory
+    }
+    respond "Staging mail service" 200
+    header X-Robots-Tag "noindex, nofollow"
+}

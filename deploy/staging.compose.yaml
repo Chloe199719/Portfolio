@@ -1,0 +1,145 @@
+# Standalone staging stack for a host whose existing Caddy owns ports 80/443.
+# Run with: docker compose --env-file .env -f staging.compose.yaml up -d
+# Route to 127.0.0.1:18080 only through Caddy, which must replace X-Real-IP.
+name: chloe-staging
+services:
+  backend:
+    image: ${BACKEND_IMAGE:?Set the tested backend image tag}
+    user: "10001:10001"
+    environment:
+      APP_ENV: production
+      LISTEN_ADDR: :8080
+      DATABASE_URL: postgresql://portfolio:${POSTGRES_PASSWORD:?Set a URL-safe database password}@db:5432/portfolio?pool_max_conns=5
+      DATA_DIR: /data
+      SITE_URL: https://${FRONTEND_HOST:?Set the custom staging frontend hostname}
+      FRONTEND_ORIGINS: https://${FRONTEND_HOST}
+      API_URL: https://${API_HOST:?Set the staging API hostname}
+      ISSUER_URL: https://${AUTH_HOST:?Set the staging identity hostname}
+      REGISTRATION_ENABLED: ${REGISTRATION_ENABLED:-false}
+      SMTP_ADDR: mail.staging.chloepratas.com:587
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      MAIL_FROM: ${MAIL_FROM:-}
+      GOMEMLIMIT: 96MiB
+      GOMAXPROCS: "1"
+    ports: ["127.0.0.1:18080:8080"]
+    volumes: [backend_data:/data]
+    networks: [web, database, mail]
+    depends_on:
+      db: { condition: service_healthy }
+    restart: unless-stopped
+    read_only: true
+    tmpfs: ["/tmp:size=32m,mode=1777"]
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    mem_limit: 192m
+    cpus: 0.75
+    pids_limit: 128
+    logging:
+      driver: json-file
+      options: { max-size: 10m, max-file: "3" }
+    healthcheck:
+      test:
+        [
+          CMD,
+          wget,
+          -q,
+          --spider,
+          --header,
+          "Host: ${API_HOST}",
+          "http://127.0.0.1:8080/v1/health",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: portfolio
+      POSTGRES_USER: portfolio
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    command:
+      [
+        postgres,
+        -c,
+        shared_buffers=32MB,
+        -c,
+        max_connections=25,
+        -c,
+        work_mem=2MB,
+        -c,
+        maintenance_work_mem=16MB,
+      ]
+    volumes: [postgres:/var/lib/postgresql]
+    networks: [database]
+    restart: unless-stopped
+    mem_limit: 192m
+    cpus: 0.75
+    pids_limit: 128
+    shm_size: 64m
+    logging:
+      driver: json-file
+      options: { max-size: 10m, max-file: "3" }
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U portfolio -d portfolio"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  mail:
+    profiles: [mail]
+    image: ghcr.io/docker-mailserver/docker-mailserver:16.0.1@sha256:d0fe7668defe157aad57ea31b1707ad1e2fb57d7a91bdf17cbdf876549946c86
+    hostname: mail.staging.chloepratas.com
+    environment:
+      SSL_TYPE: manual
+      SSL_CERT_PATH: /srv/tls/mail.staging.chloepratas.com.crt
+      SSL_KEY_PATH: /srv/tls/mail.staging.chloepratas.com.key
+      ENABLE_RSPAMD: 0
+      ENABLE_CLAMAV: 0
+      ENABLE_AMAVIS: 0
+      ENABLE_SPAMASSASSIN: 0
+      ENABLE_OPENDKIM: 1
+      ENABLE_OPENDMARC: 1
+      ENABLE_POLICYD_SPF: 1
+      ENABLE_FAIL2BAN: 0
+      PERMIT_DOCKER: none
+      SPOOF_PROTECTION: 1
+      POSTMASTER_ADDRESS: postmaster@notify.staging.chloepratas.com
+      POSTFIX_INET_PROTOCOLS: ipv4
+      DOVECOT_INET_PROTOCOLS: ipv4
+    # Submission stays on the private Docker network; only bounce reception is public.
+    ports: ["25:25"]
+    volumes:
+      - mail_data:/var/mail
+      - mail_state:/var/mail-state
+      - mail_logs:/var/log/mail
+      - ./mail-config:/tmp/docker-mailserver
+      - /opt/vaultwarden/caddy-data/caddy/certificates/acme-v02.api.letsencrypt.org-directory/mail.staging.chloepratas.com:/srv/tls:ro
+    networks:
+      mail:
+        aliases: [mail.staging.chloepratas.com]
+    restart: unless-stopped
+    mem_limit: 256m
+    memswap_limit: 512m
+    cpus: 0.5
+    pids_limit: 256
+    logging:
+      driver: json-file
+      options: { max-size: 10m, max-file: "3" }
+    healthcheck:
+      test: [CMD-SHELL, "ss --listening --tcp | grep -q ':smtp ' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+volumes:
+  postgres:
+  mail_data:
+  mail_state:
+  mail_logs:
+  backend_data:
+networks:
+  web:
+  mail:
+  database:
+    internal: true

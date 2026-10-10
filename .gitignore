@@ -37,3 +37,11 @@ next-env.d.ts
 
 .vercel
 /trash/
+.backups/
+test-results/
+playwright-report/
+.env
+
+data/
+
+*-debug.log*

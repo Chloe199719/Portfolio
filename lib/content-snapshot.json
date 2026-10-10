@@ -1,0 +1,565 @@
+[
+  {
+    "_createdAt": "2023-03-08T18:12:00Z",
+    "_id": "12b8f5f4-4b80-4ffc-a73e-07bbb4177d62",
+    "_rev": "Jn8K1Fx8sOdF26GHuBALpU",
+    "_type": "Skill",
+    "_updatedAt": "2023-03-08T18:37:08Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-f861f24c3ca01270aa3b54f1050d996f78af7870-1708x1044-jpg",
+        "_type": "reference"
+      }
+    },
+    "progress": 80,
+    "title": "PostMan"
+  },
+  {
+    "_createdAt": "2023-02-01T18:59:22Z",
+    "_id": "13b3b5de-6bfd-41fb-ac0a-f157251d37c3",
+    "_rev": "0mmgc4CDWeXHLRG7WqgyGF",
+    "_type": "Skill",
+    "_updatedAt": "2023-02-01T18:59:22Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-4287420d54005bba8a518146a92505057424f2aa-300x300-png",
+        "_type": "reference"
+      }
+    },
+    "progress": 95,
+    "title": "HTML5"
+  },
+  {
+    "_createdAt": "2023-02-01T18:49:24Z",
+    "_id": "162d0194-4199-4980-888a-b2576e49917b",
+    "_rev": "1elAq4e8XihlfIJTQlJc7t",
+    "_type": "social",
+    "_updatedAt": "2023-02-01T18:49:24Z",
+    "title": "Github",
+    "url": "https://github.com/Chloe199719"
+  },
+  {
+    "_createdAt": "2023-03-08T18:06:32Z",
+    "_id": "20e5b12e-faa2-427e-9c95-e425f0a032a8",
+    "_rev": "Jn8K1Fx8sOdF26GHuBFT6I",
+    "_type": "projects",
+    "_updatedAt": "2023-03-08T18:51:30Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-4bb83f0dae3e886133881027c9ed1a1a52b46a07-2558x1315-png",
+        "_type": "reference"
+      },
+      "alt": "Commerce & booking application screenshot"
+    },
+    "linkToBuild": "https://github.com/Chloe199719/voicewebsitev2",
+    "summary": "A booking system, shop, and account experience in one web application.",
+    "technologies": [
+      {
+        "_key": "625ca01b11c7",
+        "_ref": "75d00fc7-e07a-4e90-8aea-77897a8c2cef",
+        "_type": "reference"
+      },
+      {
+        "_key": "2a52789458ee",
+        "_ref": "a957128c-6712-46c0-86b4-82ce37c08af6",
+        "_type": "reference"
+      },
+      {
+        "_key": "c3d82fbd957f",
+        "_ref": "6b601c88-86bb-4c31-b6ee-d5f93f537a1a",
+        "_type": "reference"
+      },
+      {
+        "_key": "88fb2aeca4d7",
+        "_ref": "906d5f5f-85e5-410a-bced-7aef6a08d39f",
+        "_type": "reference"
+      },
+      {
+        "_key": "0d22906a1c60",
+        "_ref": "23bcacef-396e-4ae5-bdaf-14f747b60b79",
+        "_type": "reference"
+      },
+      {
+        "_key": "be2f5e5ca9d6",
+        "_ref": "ac672e3d-fefa-4f7f-9be7-162c7a74508c",
+        "_type": "reference"
+      },
+      {
+        "_key": "6219a2b53906",
+        "_ref": "12b8f5f4-4b80-4ffc-a73e-07bbb4177d62",
+        "_type": "reference"
+      },
+      {
+        "_key": "b39577a5f3cc",
+        "_ref": "beb99008-e3b7-44c9-8199-a5a85fdcf68b",
+        "_type": "reference"
+      }
+    ],
+    "title": "Commerce & booking",
+    "slug": {
+      "current": "real-life-ecommerce-website"
+    },
+    "order": 0,
+    "featured": true
+  },
+  {
+    "_createdAt": "2023-03-08T18:06:01Z",
+    "_id": "23bcacef-396e-4ae5-bdaf-14f747b60b79",
+    "_rev": "Q7m7T23MV8F9iWFgEn08v3",
+    "_type": "Skill",
+    "_updatedAt": "2023-03-08T18:38:33Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-6b932c74b0647c4136713ddaa11bc5e96d7fd344-225x225-png",
+        "_type": "reference"
+      }
+    },
+    "progress": 85,
+    "title": "Prisma"
+  },
+  {
+    "_createdAt": "2023-02-01T18:47:57Z",
+    "_id": "3ba3ec24-971a-4943-8173-125aca20f037",
+    "_rev": "Q1OSDv7ENubrvujoM6LnVS",
+    "_type": "pageInfo",
+    "_updatedAt": "2024-07-07T13:00:30Z",
+    "email": "chloevision97@gmail.com",
+    "heroImage": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-db56cfbf3359d73e4b6e2f0aef4f222e7d31e756-2316x3088-jpg",
+        "_type": "reference"
+      },
+      "alt": "Portrait of Chloe Pratas"
+    },
+    "name": "Chloe Pratas",
+    "profilePic": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-2507ebdb80d1ada9b81d87f5bbd39f03ec6e3c5e-2316x3088-jpg",
+        "_type": "reference"
+      },
+      "alt": "Portrait of Chloe Pratas"
+    },
+    "role": "Software Engineer ",
+    "socials": [
+      {
+        "_key": "8ec754ebc7d0",
+        "_ref": "162d0194-4199-4980-888a-b2576e49917b",
+        "_type": "reference"
+      },
+      {
+        "_key": "4a0a1e19c2f2",
+        "_ref": "5cdb32e6-e38d-46fc-8282-7ee47d1d732d",
+        "_type": "reference"
+      }
+    ]
+  },
+  {
+    "_createdAt": "2023-02-01T18:59:54Z",
+    "_id": "58e29130-6d3b-45c2-a955-fcd6997a293f",
+    "_rev": "O93Jvjc4Q57YOPC6zNbrdt",
+    "_type": "Skill",
+    "_updatedAt": "2023-03-08T18:59:35Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-9c58e2d0556336c92269db5be5391f4ef1b5fcf6-300x300-png",
+        "_type": "reference"
+      }
+    },
+    "progress": 80,
+    "title": "Jest"
+  },
+  {
+    "_createdAt": "2023-02-01T18:50:03Z",
+    "_id": "5cdb32e6-e38d-46fc-8282-7ee47d1d732d",
+    "_rev": "1elAq4e8XihlfIJTQlJlSP",
+    "_type": "social",
+    "_updatedAt": "2023-02-01T18:50:03Z",
+    "title": "LinkedIN",
+    "url": "https://www.linkedin.com/in/chloe-pratas-378b87182/"
+  },
+  {
+    "_createdAt": "2023-02-01T18:50:27Z",
+    "_id": "6a6f144a-2903-46a6-9919-0bd6e0f77fe2",
+    "_rev": "kDhfvHIeclVE3PyeaPTQoS",
+    "_type": "social",
+    "_updatedAt": "2023-02-01T18:50:27Z",
+    "title": "Twitch",
+    "url": "https://www.twitch.tv/khloe_wow"
+  },
+  {
+    "_createdAt": "2023-02-01T19:00:35Z",
+    "_id": "6b601c88-86bb-4c31-b6ee-d5f93f537a1a",
+    "_rev": "Q7m7T23MV8F9iWFgEmZGS5",
+    "_type": "Skill",
+    "_updatedAt": "2023-03-08T17:58:39Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-f0b0f82ff1e91539b6c39a45336f8ee5cd6f8b29-300x300-png",
+        "_type": "reference"
+      }
+    },
+    "progress": 60,
+    "title": "TypeScript"
+  },
+  {
+    "_createdAt": "2023-02-01T19:05:40Z",
+    "_id": "75d00fc7-e07a-4e90-8aea-77897a8c2cef",
+    "_rev": "Q7m7T23MV8F9iWFgEnFfjr",
+    "_type": "Skill",
+    "_updatedAt": "2023-03-08T18:58:19Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-fc2ff0bb0ca6087c95cd26c7bd9d27dbee22ac71-300x300-png",
+        "_type": "reference"
+      }
+    },
+    "progress": 80,
+    "title": "Next.js"
+  },
+  {
+    "_createdAt": "2023-08-10T23:48:35Z",
+    "_id": "8b3faf2c-464e-4a60-9b54-8dd8e265a1e6",
+    "_rev": "ghWMPMfw61YhJv1Zw6GFbA",
+    "_type": "Skill",
+    "_updatedAt": "2023-08-10T23:48:35Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-9a2057cd4f663788536d333dc41ee869bbb09fa4-1024x1024-png",
+        "_type": "reference"
+      }
+    },
+    "progress": 50,
+    "title": "Rust"
+  },
+  {
+    "_createdAt": "2023-02-01T18:58:49Z",
+    "_id": "906d5f5f-85e5-410a-bced-7aef6a08d39f",
+    "_rev": "Jn8K1Fx8sOdF26GHuBHQTS",
+    "_type": "Skill",
+    "_updatedAt": "2023-03-08T18:59:47Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-a12e1ce8de1bfb8ca97e22ecd1f913457fcc1a59-300x300-png",
+        "_type": "reference"
+      }
+    },
+    "progress": 85,
+    "title": "CSS"
+  },
+  {
+    "_createdAt": "2023-02-01T19:01:29Z",
+    "_id": "a957128c-6712-46c0-86b4-82ce37c08af6",
+    "_rev": "Q7m7T23MV8F9iWFgEmZueP",
+    "_type": "Skill",
+    "_updatedAt": "2023-03-08T17:59:32Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-8c8d31d0e45ce12ece6c2425ead6f2567d04463a-300x300-png",
+        "_type": "reference"
+      }
+    },
+    "progress": 90,
+    "title": "React "
+  },
+  {
+    "_createdAt": "2023-03-08T18:06:28Z",
+    "_id": "ac672e3d-fefa-4f7f-9be7-162c7a74508c",
+    "_rev": "Q7m7T23MV8F9iWFgEmegd3",
+    "_type": "Skill",
+    "_updatedAt": "2023-03-08T18:06:28Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-42f03c6a16200649a3b901d62d42a351ad93b3a4-221x228-png",
+        "_type": "reference"
+      }
+    },
+    "progress": 85,
+    "title": "REST API"
+  },
+  {
+    "_createdAt": "2023-02-01T19:03:17Z",
+    "_id": "b934df12-237a-408b-a0f7-43f249f1b3a6",
+    "_rev": "0mmgc4CDWeXHLRG7WqnZtG",
+    "_type": "Skill",
+    "_updatedAt": "2023-02-01T19:03:26Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-9058406860b61d2c623b00dab4c640578505cd67-300x300-png",
+        "_type": "reference"
+      }
+    },
+    "progress": 80,
+    "title": "Firebase"
+  },
+  {
+    "_createdAt": "2023-02-01T18:57:18Z",
+    "_id": "baa3a8d1-424f-4bc8-808f-e1b3914e2d68",
+    "_rev": "0mmgc4CDWeXHLRG7WqfNHO",
+    "_type": "Skill",
+    "_updatedAt": "2023-02-01T18:57:18Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-2a959b184927c97e03ce5ca3c5776b1207bc150c-300x300-png",
+        "_type": "reference"
+      }
+    },
+    "progress": 80,
+    "title": "JavaScript"
+  },
+  {
+    "_createdAt": "2023-02-01T19:01:49Z",
+    "_id": "bd845e1d-8fb4-42cd-a6e2-d74d0a366e34",
+    "_rev": "Q7m7T23MV8F9iWFgEmaMYJ",
+    "_type": "Skill",
+    "_updatedAt": "2023-03-08T17:59:49Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-96298f7afdd5007104660ed66e9061c170013d98-300x300-png",
+        "_type": "reference"
+      }
+    },
+    "progress": 80,
+    "title": "ExpressJs"
+  },
+  {
+    "_createdAt": "2023-08-21T12:14:20Z",
+    "_id": "be5d5463-299e-4b3f-9e3f-b904c5aec8ea",
+    "_rev": "bzZ5SGBSb1WLZp9hSTt136",
+    "_type": "projects",
+    "_updatedAt": "2023-08-21T12:14:20Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-3bcf3f034023510458c79a87afbab9dd5399bfb8-1698x1391-png",
+        "_type": "reference"
+      },
+      "alt": "Employee management application screenshot"
+    },
+    "linkToBuild": "https://employe-management-sytem-ems-taupe.vercel.app/",
+    "summary": "A web application for managing employee tasks and working hours.",
+    "technologies": [
+      {
+        "_key": "e5b80e900c50",
+        "_ref": "6b601c88-86bb-4c31-b6ee-d5f93f537a1a",
+        "_type": "reference"
+      },
+      {
+        "_key": "f78f069007bc",
+        "_ref": "23bcacef-396e-4ae5-bdaf-14f747b60b79",
+        "_type": "reference"
+      },
+      {
+        "_key": "ab16d0b5ed18",
+        "_ref": "75d00fc7-e07a-4e90-8aea-77897a8c2cef",
+        "_type": "reference"
+      },
+      {
+        "_key": "6f7dbad085d5",
+        "_ref": "beb99008-e3b7-44c9-8199-a5a85fdcf68b",
+        "_type": "reference"
+      },
+      {
+        "_key": "8d5dccaed130",
+        "_ref": "c2fbef8f-a48c-4193-844d-e202a9675416",
+        "_type": "reference"
+      },
+      {
+        "_key": "0c308948263e",
+        "_ref": "ac672e3d-fefa-4f7f-9be7-162c7a74508c",
+        "_type": "reference"
+      },
+      {
+        "_key": "36d90cbc6554",
+        "_ref": "a957128c-6712-46c0-86b4-82ce37c08af6",
+        "_type": "reference"
+      }
+    ],
+    "title": "Employee management",
+    "slug": {
+      "current": "employee-management-system"
+    },
+    "order": 1,
+    "featured": true
+  },
+  {
+    "_createdAt": "2023-03-08T18:39:22Z",
+    "_id": "beb99008-e3b7-44c9-8199-a5a85fdcf68b",
+    "_rev": "O93Jvjc4Q57YOPC6zNO3pV",
+    "_type": "Skill",
+    "_updatedAt": "2023-03-08T18:41:38Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-798fabf02295234b5faac039bee99161a9824092-512x512-png",
+        "_type": "reference"
+      }
+    },
+    "progress": 80,
+    "title": "PostGreSql"
+  },
+  {
+    "_createdAt": "2023-02-01T19:06:44Z",
+    "_id": "c2fbef8f-a48c-4193-844d-e202a9675416",
+    "_rev": "O93Jvjc4Q57YOPC6zNbuKz",
+    "_type": "Skill",
+    "_updatedAt": "2023-03-08T18:59:42Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-be493c9191ecd1b07b270ec0b59f8b46825d3c1a-240x240-png",
+        "_type": "reference"
+      }
+    },
+    "progress": 80,
+    "title": "Node.Js"
+  },
+  {
+    "_createdAt": "2023-08-21T10:54:49Z",
+    "_id": "d7618a45-94d2-47d9-a5f3-7a232116ffc6",
+    "_rev": "bzZ5SGBSb1WLZp9hSTuq0K",
+    "_type": "projects",
+    "_updatedAt": "2023-08-21T12:18:28Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-9e327d309a889a22e0b4d43fa414b70ba6a095fb-1700x1375-png",
+        "_type": "reference"
+      },
+      "alt": "Cookie Clicker application screenshot"
+    },
+    "linkToBuild": "https://cookie-clicker-topaz.vercel.app/",
+    "summary": "A TypeScript clicker game with levels, upgrades, and achievements.",
+    "technologies": [
+      {
+        "_key": "6f2602f39195",
+        "_ref": "6b601c88-86bb-4c31-b6ee-d5f93f537a1a",
+        "_type": "reference"
+      },
+      {
+        "_key": "d3e4458e5fff",
+        "_ref": "75d00fc7-e07a-4e90-8aea-77897a8c2cef",
+        "_type": "reference"
+      },
+      {
+        "_key": "495454967682",
+        "_ref": "a957128c-6712-46c0-86b4-82ce37c08af6",
+        "_type": "reference"
+      },
+      {
+        "_key": "3576c17d78ec",
+        "_type": "reference"
+      }
+    ],
+    "title": "Cookie Clicker",
+    "slug": {
+      "current": "cookie-clicker-the-game"
+    },
+    "order": 2,
+    "featured": false
+  },
+  {
+    "_createdAt": "2023-08-21T12:17:35Z",
+    "_id": "dbe8f7ab-4261-4db7-8fac-3ca44cac1a7e",
+    "_rev": "bzZ5SGBSb1WLZp9hSTu1PY",
+    "_type": "projects",
+    "_updatedAt": "2023-08-21T12:17:35Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-b326f716988e404226c50a05138dce61b26d0775-1711x1281-png",
+        "_type": "reference"
+      },
+      "alt": "Browser chess application screenshot"
+    },
+    "linkToBuild": "https://python-chest.vercel.app/",
+    "summary": "A browser-based chess game built with TypeScript.",
+    "technologies": [
+      {
+        "_key": "13b8c9117fb7",
+        "_ref": "6b601c88-86bb-4c31-b6ee-d5f93f537a1a",
+        "_type": "reference"
+      },
+      {
+        "_key": "9b4ad123edb5",
+        "_ref": "75d00fc7-e07a-4e90-8aea-77897a8c2cef",
+        "_type": "reference"
+      },
+      {
+        "_key": "4dc1c2b87ce3",
+        "_type": "reference"
+      }
+    ],
+    "title": "Browser chess",
+    "slug": {
+      "current": "browser-chest-game"
+    },
+    "order": 3,
+    "featured": false
+  },
+  {
+    "_createdAt": "2023-02-02T02:36:14Z",
+    "_id": "eabbf977-680c-4edc-8cbd-696f2647eeda",
+    "_rev": "0mmgc4CDWeXHLRG7XNybeC",
+    "_type": "projects",
+    "_updatedAt": "2023-02-04T05:12:09Z",
+    "image": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-fb0ac885877b5f2b32e07aaa0116c7e0c9f5fc87-2546x1312-png",
+        "_type": "reference"
+      },
+      "alt": "Shopping cart application screenshot"
+    },
+    "linkToBuild": "https://github.com/Chloe199719/shopingcart",
+    "summary": "A React storefront with Firebase-powered inventory and an admin area.",
+    "technologies": [
+      {
+        "_key": "fe448516ca4b",
+        "_ref": "13b3b5de-6bfd-41fb-ac0a-f157251d37c3",
+        "_type": "reference"
+      },
+      {
+        "_key": "bd1058aa8379",
+        "_ref": "906d5f5f-85e5-410a-bced-7aef6a08d39f",
+        "_type": "reference"
+      },
+      {
+        "_key": "f6345f4b2f15",
+        "_ref": "b934df12-237a-408b-a0f7-43f249f1b3a6",
+        "_type": "reference"
+      },
+      {
+        "_key": "a4533c442682",
+        "_ref": "a957128c-6712-46c0-86b4-82ce37c08af6",
+        "_type": "reference"
+      },
+      {
+        "_key": "83fa26897ed4",
+        "_ref": "baa3a8d1-424f-4bc8-808f-e1b3914e2d68",
+        "_type": "reference"
+      }
+    ],
+    "title": "Shopping cart",
+    "slug": {
+      "current": "shopping-cart"
+    },
+    "order": 4,
+    "featured": false
+  }
+]

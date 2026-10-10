@@ -1,0 +1,39 @@
+# Append these sites to the existing host-network Caddy configuration.
+# Keep its global options and all existing site blocks intact.
+api.staging.chloepratas.com {
+    encode zstd gzip
+    request_body {
+        max_size 12MB
+    }
+    @api path /v1/* /media/*
+    handle @api {
+        reverse_proxy 127.0.0.1:18080 {
+            header_up X-Real-IP {remote_host}
+        }
+    }
+    handle {
+        respond "Not found" 404
+    }
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options nosniff
+        X-Robots-Tag "noindex, nofollow"
+    }
+}
+auth.staging.chloepratas.com {
+    encode zstd gzip
+    request_body {
+        max_size 256KB
+    }
+    @notIdentity path /v1/* /media/*
+    respond @notIdentity "Not found" 404
+    reverse_proxy 127.0.0.1:18080 {
+        header_up X-Real-IP {remote_host}
+    }
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options nosniff
+        X-Robots-Tag "noindex, nofollow"
+        Referrer-Policy same-origin
+    }
+}

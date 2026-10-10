@@ -1,0 +1,38 @@
+Staging mail DNS — chloepratas.com
+
+Add these in Cloudflare. Do not replace the root domain's existing MX records
+or the staging frontend's CNAME. All names below are relative to chloepratas.com.
+
+Type: A
+Name: mail.staging
+Value: 104.105.15.153
+Proxy: DNS only (grey cloud)
+
+Type: MX
+Name: notify.staging
+Mail server: mail.staging.chloepratas.com
+Priority: 10
+
+Type: TXT
+Name: notify.staging
+Value: v=spf1 ip4:104.105.15.153 -all
+
+Type: TXT
+Name: mail.staging
+Value: v=spf1 ip4:104.105.15.153 -all
+
+Type: TXT
+Name: _dmarc.notify.staging
+Value: v=DMARC1; p=none; rua=mailto:dmarc@notify.staging.chloepratas.com
+
+Type: TXT
+Name: mail._domainkey.notify.staging
+Value: v=DKIM1; h=sha256; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmBkiSygE790bpUnWG81D5JE8or4deYf/WbsjGSD7dTBHh4cgqLoOy0VZzyQaw/6WZjafw+/fsTtPUhqyNo7RgjraTf1yhRwjC6Ssu6xQHr+pUd924aLXE+sB7GYvJwGA8kgmMFI0bNDXcegHskAPOCnJgF+YRLuuSVl3bZONSG5a2ZnT/qoJoYcDeiFa0U7EO+lTzopdhXHcDbpsfw43M+Bo2k2z0lBG0iSMSIEXCm+ttUa2IdeIGRApOxRt1wvQQP5JnePNLrdNddNhe3hP18jYUY9P0RSqrO7q98GAY40SA5A6bOJRjvYnXFwa3Wq7bK3Gis34sYuDH1/sSwgSawIDAQAB
+
+In Linode, set reverse DNS (PTR) for 104.105.15.153 to:
+mail.staging.chloepratas.com
+The A record must be saved before Linode will accept this PTR.
+
+Sender / SMTP account: accounts@notify.staging.chloepratas.com
+Postmaster, DMARC reports, and bounces are delivered to the same local mailbox.
+This file contains only public DNS information; no private signing keys.

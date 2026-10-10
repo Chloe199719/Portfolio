@@ -1,0 +1,45 @@
+{
+    email {$ACME_EMAIL}
+    acme_ca https://acme-v02.api.letsencrypt.org/directory
+}
+api.{$DOMAIN} {
+    encode zstd gzip
+    request_body {
+        max_size 12MB
+    }
+    @api path /v1/* /media/*
+    handle @api {
+        reverse_proxy backend:8080 {
+            header_up X-Real-IP {remote_host}
+        }
+    }
+    handle {
+        respond "Not found" 404
+    }
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options nosniff
+        X-Robots-Tag "noindex, nofollow"
+    }
+}
+auth.{$DOMAIN} {
+    encode zstd gzip
+    request_body {
+        max_size 256KB
+    }
+    @notIdentity path /v1/* /media/*
+    respond @notIdentity "Not found" 404
+    reverse_proxy backend:8080 {
+        header_up X-Real-IP {remote_host}
+    }
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options nosniff
+        X-Robots-Tag "noindex, nofollow"
+        Referrer-Policy same-origin
+    }
+}
+mail.{$DOMAIN} {
+    respond "Mail service" 200
+    header X-Robots-Tag "noindex, nofollow"
+}
